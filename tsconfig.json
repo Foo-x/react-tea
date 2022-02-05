@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "pretty": true,
+    "jsx": "react-jsx",
+    "newLine": "lf",
+    "outDir": "dist/"
+  },
+  "include": ["src/**/*"]
+}

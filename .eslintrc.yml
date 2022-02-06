@@ -15,7 +15,7 @@ extends:
   - prettier
 parser: '@typescript-eslint/parser'
 parserOptions:
-  project: './tsconfig.json'
+  project: './__tests__/tsconfig.json'
   ecmaFeatures:
     jsx: true
   ecmaVersion: latest
@@ -32,18 +32,15 @@ rules:
         - .jsx
         - .ts
         - .tsx
-  import/extensions:
+  react/react-in-jsx-scope: off
+  react/function-component-definition:
     - error
-    - ignorePackages
-    - js: never
-      jsx: never
-      ts: never
-      tsx: never
+    - namedComponents: arrow-function
+      unnamedComponents: arrow-function
+  import/extensions: off
+  import/prefer-default-export: off
+  arrow-body-style: off
+  '@typescript-eslint/no-misused-promises': off
 settings:
   import/resolver:
-    node:
-      extensions:
-        - .js
-        - .jsx
-        - .ts
-        - .tsx
+    typescript: {}

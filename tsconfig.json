@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2021",
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "esModuleInterop": true,
     "strict": true,
-    "noEmit": true,
+    "declaration": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -15,6 +15,10 @@
     "pretty": true,
     "jsx": "react-jsx",
     "newLine": "lf",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "outDir": "dist/"
   },
   "include": ["src/**/*"]

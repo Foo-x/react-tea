@@ -13,7 +13,9 @@
     "fmt:prettier": "npm run lint:prettier --write",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "test:w": "jest --watch",
+    "test:c": "jest --coverage"
   },
   "repository": {
     "type": "git",

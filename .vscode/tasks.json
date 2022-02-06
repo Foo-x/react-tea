@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "npm",
+      "script": "test:w",
+      "problemMatcher": [],
+      "group": "test",
+      "label": "npm: test:w",
+      "detail": "npm run test:w"
+    },
+    {
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "test:w", "--", "${input:regexForTestFiles}"],
+      "problemMatcher": [],
+      "group": "test",
+      "label": "npm: test:w | filter files",
+      "detail": "npm run test:w -- <regexForTestFiles>"
+    },
+    {
+      "type": "npm",
+      "script": "test:c",
+      "problemMatcher": [],
+      "group": "test",
+      "label": "npm: test:c",
+      "detail": "npm run test:c"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "regexForTestFiles",
+      "type": "promptString",
+      "default": "",
+      "description": "テスト対象ファイルの正規表現（空文字でデフォルトの動作）",
+    }
+  ]
+}

@@ -127,7 +127,9 @@ describe('useTea', () => {
 
     expect(result.current[0]).toBe(0);
 
-    jest.runAllTimers();
+    act(() => {
+      jest.runAllTimers();
+    });
 
     expect(result.current[0]).toBe(1);
   });

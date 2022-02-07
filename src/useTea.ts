@@ -15,7 +15,7 @@ type TeaMsg<Msg> =
       msg: Msg;
     };
 
-type TeaProps<Model, Msg> = {
+export type UseTeaProps<Model, Msg> = {
   init: Init<Model, Msg>;
   update: Update<Model, Msg>;
 };
@@ -23,7 +23,7 @@ type TeaProps<Model, Msg> = {
 export const useTea = <Model, Msg>({
   init,
   update,
-}: TeaProps<Model, Msg>): [Model, Dispatch<Msg>] => {
+}: UseTeaProps<Model, Msg>): [Model, Dispatch<Msg>] => {
   const reducer = useCallback(
     (
       [model, cmd]: [Model, Cmd<Msg>],

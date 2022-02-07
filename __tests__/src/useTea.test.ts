@@ -113,4 +113,22 @@ describe('useTea', () => {
     expect(result.current[0]).toBe(3);
     expect(count).toBe(4);
   });
+
+  test('cmd in init', () => {
+    const { result } = renderHook(() =>
+      useTea({
+        init: () => [
+          0,
+          Cmd.delay<Msg>((dispatch) => dispatch('increment'), 100),
+        ],
+        update,
+      })
+    );
+
+    expect(result.current[0]).toBe(0);
+
+    jest.runAllTimers();
+
+    expect(result.current[0]).toBe(1);
+  });
 });

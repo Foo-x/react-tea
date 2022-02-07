@@ -37,6 +37,8 @@ rules:
     - error
     - namedComponents: arrow-function
       unnamedComponents: arrow-function
+  react/jsx-props-no-spreading: off
+  react/require-default-props: off
   import/extensions: off
   import/prefer-default-export: off
   arrow-body-style: off

@@ -21,12 +21,13 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
   init,
   View,
   update,
-}: TeaProps<Model, Msg, Props>): React.VFC<
-  Omit<Props, 'model' | 'dispatch'>
-> => {
-  const [model, dispatch] = useTea({ init, update });
-  return (propsWithoutViewProps) => {
+}: TeaProps<Model, Msg, Props>) => {
+  const TeaComponent = (
+    propsWithoutViewProps: Omit<Props, 'model' | 'dispatch'>
+  ) => {
+    const [model, dispatch] = useTea({ init, update });
     const props = { ...propsWithoutViewProps, model, dispatch } as Props;
     return <View {...props} />;
   };
+  return TeaComponent;
 };

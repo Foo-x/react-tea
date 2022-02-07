@@ -1,2 +1,3 @@
-export * as Cmd from './cmd';
+export * from './cmd';
+export * from './Tea';
 export * from './useTea';

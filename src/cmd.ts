@@ -18,3 +18,6 @@ export const promise = <Msg>(promiseAction: PromiseAction<Msg>): Cmd<Msg> => {
 export const batch = <Msg>(...cmds: Cmd<Msg>[]): Cmd<Msg> => {
   return cmds.flat();
 };
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Cmd = { none, delay, promise, batch };

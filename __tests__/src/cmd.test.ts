@@ -11,17 +11,17 @@ afterAll(() => {
 });
 
 describe('Cmd', () => {
-  test('none returns empty set', () => {
-    expect(Cmd.none()).toEqual(new Set());
+  test('none returns empty array', () => {
+    expect(Cmd.none()).toEqual([]);
   });
 
-  test('delay returns set with cmd that runs setTimeout', async () => {
+  test('delay returns array with cmd that runs setTimeout', async () => {
     const cmd = Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100);
 
-    expect(cmd.size).toBe(1);
+    expect(cmd).toHaveLength(1);
 
     const dispatch = jest.fn();
-    await [...cmd][0](dispatch);
+    await cmd[0](dispatch);
 
     expect(dispatch).not.toBeCalled();
 
@@ -30,21 +30,21 @@ describe('Cmd', () => {
     expect(dispatch).toBeCalledWith('msg');
   });
 
-  test('promise returns set with cmd that runs promise', async () => {
+  test('promise returns array with cmd that runs promise', async () => {
     const cmd = Cmd.promise<Msg>(async (dispatch) => {
       await Promise.resolve();
       dispatch('msg');
     });
 
-    expect(cmd.size).toBe(1);
+    expect(cmd).toHaveLength(1);
 
     const dispatch = jest.fn();
-    await [...cmd][0](dispatch);
+    await cmd[0](dispatch);
 
     expect(dispatch).toBeCalledWith('msg');
   });
 
-  test('batch returns set with cmds', async () => {
+  test('batch returns array with cmds', async () => {
     const cmd = Cmd.batch<Msg>(
       Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100),
       Cmd.promise(async (dispatch) => {
@@ -53,10 +53,10 @@ describe('Cmd', () => {
       })
     );
 
-    expect(cmd.size).toBe(2);
+    expect(cmd).toHaveLength(2);
 
     const dispatch = jest.fn();
-    await [...cmd][0](dispatch);
+    await cmd[0](dispatch);
 
     expect(dispatch).not.toBeCalled();
 
@@ -66,7 +66,7 @@ describe('Cmd', () => {
 
     dispatch.mockClear();
 
-    await [...cmd][1](dispatch);
+    await cmd[1](dispatch);
 
     expect(dispatch).toBeCalledWith('msg2');
   });

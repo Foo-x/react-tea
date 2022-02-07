@@ -4,11 +4,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 
 type Model = number;
 
-type Msg =
-  | 'increment'
-  | 'multiply'
-  | 'increment-with-cmd'
-  | 'increment-with-batch';
+type Msg = 'increment' | 'increment-with-cmd' | 'increment-with-batch';
 
 const init: Init<Model, Msg> = () => [0, Cmd.none()];
 
@@ -16,9 +12,6 @@ const update: Update<Model, Msg> = (model, msg) => {
   switch (msg) {
     case 'increment':
       return [model + 1, Cmd.none()];
-
-    case 'multiply':
-      return [model * 3, Cmd.none()];
 
     case 'increment-with-cmd':
       return [model + 1, Cmd.delay((dispatch) => dispatch('increment'), 100)];
@@ -28,7 +21,7 @@ const update: Update<Model, Msg> = (model, msg) => {
         model + 1,
         Cmd.batch(
           Cmd.delay((dispatch) => dispatch('increment'), 100),
-          Cmd.delay((dispatch) => dispatch('multiply'), 200)
+          Cmd.delay((dispatch) => dispatch('increment'), 200)
         ),
       ];
 
@@ -117,7 +110,7 @@ describe('useTea', () => {
       jest.runAllTimers();
     });
 
-    expect(result.current[0]).toBe(6);
+    expect(result.current[0]).toBe(3);
     expect(count).toBe(4);
   });
 
@@ -134,9 +127,7 @@ describe('useTea', () => {
 
     expect(result.current[0]).toBe(0);
 
-    act(() => {
-      jest.runAllTimers();
-    });
+    jest.runAllTimers();
 
     expect(result.current[0]).toBe(1);
   });

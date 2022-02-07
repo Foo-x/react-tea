@@ -32,12 +32,12 @@ export const useTea = <Model, Msg>({
       switch (teaMsg.type) {
         case 'dispatch': {
           const [newModel, newCmd] = update(model, teaMsg.msg);
-          return [newModel, new Set([...cmd, ...newCmd])];
+          return [newModel, [...cmd, ...newCmd]];
         }
 
         case 'clear-and-dispatch': {
-          const clearedCmd = new Set(
-            [...cmd].filter((cmdUnit) => !teaMsg.cmd.has(cmdUnit))
+          const clearedCmd = cmd.filter(
+            (cmdUnit) => !teaMsg.cmd.includes(cmdUnit)
           );
           return reducer([model, clearedCmd], {
             type: 'dispatch',
@@ -71,7 +71,7 @@ export const useTea = <Model, Msg>({
   );
 
   useEffect(() => {
-    if (cmd.size === 0) {
+    if (cmd.length === 0) {
       return;
     }
 

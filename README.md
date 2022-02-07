@@ -1,3 +1,3 @@
-# use-tea
+# react-tea
 
-React hook for using The Elm Architecture.
+The Elm Architecture for React.

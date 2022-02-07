@@ -15,7 +15,8 @@
     "build": "tsc",
     "test": "jest",
     "test:w": "jest --watch",
-    "test:c": "jest --coverage"
+    "test:c": "jest --coverage",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

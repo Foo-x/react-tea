@@ -20,14 +20,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Foo-x/use-tea.git"
+    "url": "git+https://github.com/Foo-x/react-tea.git"
   },
   "author": "Foo-x",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Foo-x/use-tea/issues"
+    "url": "https://github.com/Foo-x/react-tea/issues"
   },
-  "homepage": "https://github.com/Foo-x/use-tea#readme",
+  "homepage": "https://github.com/Foo-x/react-tea#readme",
   "devDependencies": {
     "@swc/core": "^1.2.136",
     "@swc/jest": "^0.2.17",

@@ -19,13 +19,13 @@ type TeaMsg<Msg> =
 export type UseTeaProps<Model, Msg> = {
   init: Init<Model, Msg>;
   update: Update<Model, Msg>;
-  Subscription: Sub<Model, Msg>;
+  subscriptions: Sub<Model, Msg>;
 };
 
 export const useTea = <Model, Msg>({
   init,
   update,
-  Subscription,
+  subscriptions,
 }: UseTeaProps<Model, Msg>): [Model, Dispatch<Msg>] => {
   const reducer = useCallback(
     (
@@ -81,7 +81,7 @@ export const useTea = <Model, Msg>({
     cmd.forEach((cmdUnit) => cmdUnit(clearAndDispatch));
   }, [cmd, clearAndDispatch]);
 
-  Subscription.forEach((sub) => sub(model, dispatch));
+  subscriptions.forEach((sub) => sub(model, dispatch));
 
   return [model, dispatch];
 };

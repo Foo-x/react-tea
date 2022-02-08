@@ -20,7 +20,7 @@ const update: Update<Model, Msg> = (model, msg) => {
   }
 };
 
-const Subscription: Sub<Model, Msg> = Sub.none();
+const subscriptions: Sub<Model, Msg> = Sub.none();
 
 type Props = WithViewProps<Model, Msg>;
 
@@ -34,7 +34,7 @@ const View = ({ model, dispatch }: Props) => {
   );
 };
 
-const Sut = Tea({ init, View, update, Subscription });
+const Sut = Tea({ init, view: View, update, subscriptions });
 
 describe('Tea', () => {
   test('view', () => {

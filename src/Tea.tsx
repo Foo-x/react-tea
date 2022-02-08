@@ -15,19 +15,19 @@ type TeaProps<Model, Msg, Props extends ViewProps<Model, Msg>> = UseTeaProps<
   Model,
   Msg
 > & {
-  View: React.VFC<Props>;
+  view: React.VFC<Props>;
 };
 
 export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
   init,
   update,
-  View,
-  Subscription,
+  view,
+  subscriptions,
 }: TeaProps<Model, Msg, Props>) => {
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
-    const [model, dispatch] = useTea({ init, update, Subscription });
+    const [model, dispatch] = useTea({ init, update, subscriptions });
     const props = { ...propsWithoutViewProps, model, dispatch } as Props;
-    return <View {...props} />;
+    return view({ ...props });
   };
   return TeaComponent;
 };

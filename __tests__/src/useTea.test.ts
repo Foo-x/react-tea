@@ -54,11 +54,11 @@ afterAll(() => {
 
 describe('useTea', () => {
   describe('no subscription', () => {
-    const Subscription = Sub.none<Model, Msg>();
+    const subscriptions = Sub.none<Model, Msg>();
 
     test('initial model and dispatch', () => {
       const { result } = renderHook(() =>
-        useTea({ init, update, Subscription })
+        useTea({ init, update, subscriptions })
       );
 
       expect(result.current[0].value).toBe(0);
@@ -69,7 +69,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, Subscription });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -87,7 +87,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, Subscription });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -112,7 +112,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, Subscription });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -141,7 +141,7 @@ describe('useTea', () => {
             Cmd.delay<Msg>((dispatch) => dispatch('increment'), 100),
           ],
           update,
-          Subscription,
+          subscriptions,
         })
       );
 
@@ -162,7 +162,7 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          Subscription: Sub.of<Model, Msg>(() => [
+          subscriptions: Sub.of<Model, Msg>(() => [
             () => {
               count += 1;
             },
@@ -187,7 +187,7 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          Subscription: Sub.of<Model, Msg>((model) => [
+          subscriptions: Sub.of<Model, Msg>((model) => [
             () => {
               count += 1;
             },
@@ -220,7 +220,7 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          Subscription: Sub.of<Model, Msg>(() => [
+          subscriptions: Sub.of<Model, Msg>(() => [
             () => {
               count += 1;
             },

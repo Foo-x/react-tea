@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import type { Cmd, Dispatch } from './cmd';
+import { Sub } from './sub';
 
 export type Init<Model, Msg> = () => [Model, Cmd<Msg>];
 export type Update<Model, Msg> = (model: Model, msg: Msg) => [Model, Cmd<Msg>];
@@ -18,11 +19,13 @@ type TeaMsg<Msg> =
 export type UseTeaProps<Model, Msg> = {
   init: Init<Model, Msg>;
   update: Update<Model, Msg>;
+  Subscription: Sub<Model, Msg>;
 };
 
 export const useTea = <Model, Msg>({
   init,
   update,
+  Subscription,
 }: UseTeaProps<Model, Msg>): [Model, Dispatch<Msg>] => {
   const reducer = useCallback(
     (
@@ -77,6 +80,8 @@ export const useTea = <Model, Msg>({
 
     cmd.forEach((cmdUnit) => cmdUnit(clearAndDispatch));
   }, [cmd, clearAndDispatch]);
+
+  Subscription.forEach((sub) => sub(model, dispatch));
 
   return [model, dispatch];
 };

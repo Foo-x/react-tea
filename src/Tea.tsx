@@ -9,6 +9,7 @@ type ViewProps<Model, Msg> = {
 
 export type WithViewProps<Model, Msg, Props = unknown> = ViewProps<Model, Msg> &
   Props;
+export type WithoutViewProps<Props> = Omit<Props, 'model' | 'dispatch'>;
 
 type TeaProps<Model, Msg, Props extends ViewProps<Model, Msg>> = UseTeaProps<
   Model,
@@ -19,13 +20,12 @@ type TeaProps<Model, Msg, Props extends ViewProps<Model, Msg>> = UseTeaProps<
 
 export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
   init,
-  View,
   update,
+  View,
+  Subscription,
 }: TeaProps<Model, Msg, Props>) => {
-  const TeaComponent = (
-    propsWithoutViewProps: Omit<Props, 'model' | 'dispatch'>
-  ) => {
-    const [model, dispatch] = useTea({ init, update });
+  const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
+    const [model, dispatch] = useTea({ init, update, Subscription });
     const props = { ...propsWithoutViewProps, model, dispatch } as Props;
     return <View {...props} />;
   };

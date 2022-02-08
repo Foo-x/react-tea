@@ -1,29 +1,43 @@
 import { Cmd } from '@/cmd';
+import { Sub } from '@/sub';
 import { Init, Update, useTea } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-type Model = number;
+type Model = { value: number; version: number };
 
-type Msg = 'increment' | 'increment-with-cmd' | 'increment-with-batch';
+type Msg =
+  | 'increment'
+  | 'increment-with-cmd'
+  | 'increment-with-batch'
+  | 'increment-with-same-version';
 
-const init: Init<Model, Msg> = () => [0, Cmd.none()];
+const init: Init<Model, Msg> = () => [{ value: 0, version: 0 }, Cmd.none()];
 
 const update: Update<Model, Msg> = (model, msg) => {
   switch (msg) {
     case 'increment':
-      return [model + 1, Cmd.none()];
+      return [
+        { value: model.value + 1, version: model.version + 1 },
+        Cmd.none(),
+      ];
 
     case 'increment-with-cmd':
-      return [model + 1, Cmd.delay((dispatch) => dispatch('increment'), 100)];
+      return [
+        { value: model.value + 1, version: model.version + 1 },
+        Cmd.delay((dispatch) => dispatch('increment'), 100),
+      ];
 
     case 'increment-with-batch':
       return [
-        model + 1,
+        { value: model.value + 1, version: model.version + 1 },
         Cmd.batch(
           Cmd.delay((dispatch) => dispatch('increment'), 100),
           Cmd.delay((dispatch) => dispatch('increment'), 200)
         ),
       ];
+
+    case 'increment-with-same-version':
+      return [{ value: model.value + 1, version: model.version }, Cmd.none()];
 
     default:
       return msg;
@@ -39,98 +53,191 @@ afterAll(() => {
 });
 
 describe('useTea', () => {
-  test('initial model and dispatch', () => {
-    const { result } = renderHook(() => useTea({ init, update }));
+  describe('no subscription', () => {
+    const Subscription = Sub.none<Model, Msg>();
 
-    expect(result.current[0]).toBe(0);
-    expect(typeof result.current[1]).toBe('function');
+    test('initial model and dispatch', () => {
+      const { result } = renderHook(() =>
+        useTea({ init, update, Subscription })
+      );
+
+      expect(result.current[0].value).toBe(0);
+      expect(typeof result.current[1]).toBe('function');
+    });
+
+    test('rerender on dispatch', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        count += 1;
+        return useTea({ init, update, Subscription });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
+    });
+
+    test('rerender on cmd', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        count += 1;
+        return useTea({ init, update, Subscription });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment-with-cmd');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
+
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(result.current[0].value).toBe(2);
+      expect(count).toBe(3);
+    });
+
+    test('rerender on each cmd', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        count += 1;
+        return useTea({ init, update, Subscription });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment-with-batch');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
+
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(result.current[0].value).toBe(3);
+      expect(count).toBe(4);
+    });
+
+    test('cmd in init', () => {
+      const { result } = renderHook(() =>
+        useTea({
+          init: () => [
+            { value: 0, version: 0 },
+            Cmd.delay<Msg>((dispatch) => dispatch('increment'), 100),
+          ],
+          update,
+          Subscription,
+        })
+      );
+
+      expect(result.current[0].value).toBe(0);
+
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(result.current[0].value).toBe(1);
+    });
   });
 
-  test('rerender on dispatch', () => {
-    let count = 0;
-    const { result } = renderHook(() => {
-      count += 1;
-      return useTea({ init, update });
+  describe('with subscription', () => {
+    test('re-register subscription on rerender', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        return useTea({
+          init,
+          update,
+          Subscription: Sub.of<Model, Msg>(() => [
+            () => {
+              count += 1;
+            },
+          ]),
+        });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment-with-same-version');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
     });
 
-    expect(result.current[0]).toBe(0);
-    expect(count).toBe(1);
+    test('re-register subscription on deps update', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        return useTea({
+          init,
+          update,
+          Subscription: Sub.of<Model, Msg>((model) => [
+            () => {
+              count += 1;
+            },
+            [model.version],
+          ]),
+        });
+      });
 
-    act(() => {
-      result.current[1]('increment');
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
+
+      act(() => {
+        result.current[1]('increment-with-same-version');
+      });
+
+      expect(result.current[0].value).toBe(2);
+      expect(count).toBe(2);
     });
 
-    expect(result.current[0]).toBe(1);
-    expect(count).toBe(2);
-  });
+    test('not re-register subscription if deps is empty', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        return useTea({
+          init,
+          update,
+          Subscription: Sub.of<Model, Msg>(() => [
+            () => {
+              count += 1;
+            },
+            [],
+          ]),
+        });
+      });
 
-  test('rerender on cmd', () => {
-    let count = 0;
-    const { result } = renderHook(() => {
-      count += 1;
-      return useTea({ init, update });
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment');
+      });
+
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(1);
     });
-
-    expect(result.current[0]).toBe(0);
-    expect(count).toBe(1);
-
-    act(() => {
-      result.current[1]('increment-with-cmd');
-    });
-
-    expect(result.current[0]).toBe(1);
-    expect(count).toBe(2);
-
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    expect(result.current[0]).toBe(2);
-    expect(count).toBe(3);
-  });
-
-  test('rerender on each cmd', () => {
-    let count = 0;
-    const { result } = renderHook(() => {
-      count += 1;
-      return useTea({ init, update });
-    });
-
-    expect(result.current[0]).toBe(0);
-    expect(count).toBe(1);
-
-    act(() => {
-      result.current[1]('increment-with-batch');
-    });
-
-    expect(result.current[0]).toBe(1);
-    expect(count).toBe(2);
-
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    expect(result.current[0]).toBe(3);
-    expect(count).toBe(4);
-  });
-
-  test('cmd in init', () => {
-    const { result } = renderHook(() =>
-      useTea({
-        init: () => [
-          0,
-          Cmd.delay<Msg>((dispatch) => dispatch('increment'), 100),
-        ],
-        update,
-      })
-    );
-
-    expect(result.current[0]).toBe(0);
-
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    expect(result.current[0]).toBe(1);
   });
 });

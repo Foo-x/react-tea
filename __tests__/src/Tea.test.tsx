@@ -1,4 +1,5 @@
 import { Cmd } from '@/cmd';
+import { Sub } from '@/sub';
 import { Tea, WithViewProps } from '@/Tea';
 import { Init, Update } from '@/useTea';
 import { render, screen } from '@testing-library/react';
@@ -11,15 +12,15 @@ const init: Init<Model, Msg> = () => [0, Cmd.none()];
 
 const update: Update<Model, Msg> = (model, msg) => {
   switch (msg) {
-    case 'increment': {
+    case 'increment':
       return [model + 1, Cmd.none()];
-    }
 
-    default: {
+    default:
       return msg;
-    }
   }
 };
+
+const Subscription: Sub<Model, Msg> = Sub.none();
 
 type Props = WithViewProps<Model, Msg>;
 
@@ -33,7 +34,7 @@ const View = ({ model, dispatch }: Props) => {
   );
 };
 
-const Sut = Tea({ init, View, update });
+const Sut = Tea({ init, View, update, Subscription });
 
 describe('Tea', () => {
   test('view', () => {

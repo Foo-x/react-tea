@@ -24,7 +24,7 @@ const subscriptions: Sub<Model, Msg> = Sub.none();
 
 type Props = WithViewProps<Model, Msg>;
 
-const View = ({ model, dispatch }: Props) => {
+const view = ({ model, dispatch }: Props) => {
   return (
     <div>
       <button type='button' onClick={() => dispatch('increment')}>
@@ -34,7 +34,7 @@ const View = ({ model, dispatch }: Props) => {
   );
 };
 
-const Sut = Tea({ init, view: View, update, subscriptions });
+const Sut = Tea({ init, view, update, subscriptions });
 
 describe('Tea', () => {
   test('view', () => {

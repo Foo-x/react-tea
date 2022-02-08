@@ -11,7 +11,7 @@
     "fmt": "run-s fmt:eslint fmt:prettier",
     "fmt:eslint": "npm run lint:eslint --fix",
     "fmt:prettier": "npm run lint:prettier --write",
-    "prebuild": "rm -rf dist",
+    "prebuild": "node -e 'fs.rmSync(`dist`, {recursive: true, force: true})'",
     "build": "tsc",
     "test": "jest",
     "test:w": "jest --watch",

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
-import type { Cmd, Dispatch } from './cmd';
-import { Sub } from './sub';
+import type { Cmd, Dispatch } from './Cmd';
+import { Sub } from './Sub';
 
 export type Init<Model, Msg> = () => [Model, Cmd<Msg>];
 export type Update<Model, Msg> = (model: Model, msg: Msg) => [Model, Cmd<Msg>];

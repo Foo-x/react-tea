@@ -1,4 +1,4 @@
-import { Cmd } from '@/cmd';
+import { Cmd } from '@/Cmd';
 
 type Msg = 'msg' | 'msg2';
 

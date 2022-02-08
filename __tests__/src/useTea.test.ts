@@ -1,5 +1,5 @@
-import { Cmd } from '@/cmd';
-import { Sub } from '@/sub';
+import { Cmd } from '@/Cmd';
+import { Sub } from '@/Sub';
 import { Init, Update, useTea } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 

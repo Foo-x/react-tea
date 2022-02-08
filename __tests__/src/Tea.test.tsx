@@ -1,5 +1,5 @@
-import { Cmd } from '@/cmd';
-import { Sub } from '@/sub';
+import { Cmd } from '@/Cmd';
+import { Sub } from '@/Sub';
 import { Tea, WithViewProps } from '@/Tea';
 import { Init, Update } from '@/useTea';
 import { render, screen } from '@testing-library/react';

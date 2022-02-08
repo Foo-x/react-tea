@@ -1,4 +1,4 @@
-import { Sub } from '@/sub';
+import { Sub } from '@/Sub';
 import { renderHook } from '@testing-library/react-hooks';
 
 describe('Sub', () => {

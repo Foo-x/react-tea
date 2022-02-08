@@ -2,7 +2,7 @@ import type { Dispatch } from './Cmd';
 import type { UseTeaProps } from './useTea';
 import { useTea } from './useTea';
 
-type ViewProps<Model, Msg> = {
+export type ViewProps<Model, Msg> = {
   model: Model;
   dispatch: Dispatch<Msg>;
 };
@@ -11,10 +11,11 @@ export type WithViewProps<Model, Msg, Props = unknown> = ViewProps<Model, Msg> &
   Props;
 export type WithoutViewProps<Props> = Omit<Props, 'model' | 'dispatch'>;
 
-type TeaProps<Model, Msg, Props extends ViewProps<Model, Msg>> = UseTeaProps<
+export type TeaProps<
   Model,
-  Msg
-> & {
+  Msg,
+  Props extends ViewProps<Model, Msg>
+> = UseTeaProps<Model, Msg> & {
   view: React.VFC<Props>;
 };
 

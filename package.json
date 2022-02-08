@@ -1,7 +1,7 @@
 {
-  "name": "use-tea",
+  "name": "react-tea",
   "version": "0.1.0",
-  "description": "React hook for using The Elm Architecture",
+  "description": "The Elm Architecture for React",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

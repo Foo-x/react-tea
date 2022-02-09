@@ -2,7 +2,12 @@ import { Cmd, Init, Sub, Tea, Update, WithViewProps } from '@foo-x/react-tea';
 
 type Model = number;
 
-type Msg = 'increment' | 'decrement' | 'delay-increment';
+type Msg =
+  | 'increment'
+  | 'decrement'
+  | 'multiply'
+  | 'delay-increment'
+  | 'delay-multiply';
 
 export const init: Init<Model, Msg> = () => [0, Cmd.none()];
 
@@ -14,8 +19,14 @@ export const update: Update<Model, Msg> = (model, msg) => {
     case 'decrement':
       return [model - 1, Cmd.none()];
 
+    case 'multiply':
+      return [model * 2, Cmd.none()];
+
     case 'delay-increment':
       return [model, Cmd.delay((dispatch) => dispatch('increment'), 1000)];
+
+    case 'delay-multiply':
+      return [model, Cmd.delay((dispatch) => dispatch('multiply'), 1000)];
 
     default:
       return msg;
@@ -71,13 +82,31 @@ export const view = ({ model, dispatch, label }: Props) => {
           type='button'
           onClick={(e) => {
             e.stopPropagation();
+            dispatch('multiply');
+          }}
+        >
+          *2
+        </button>
+        <button
+          type='button'
+          onClick={(e) => {
+            e.stopPropagation();
             dispatch('delay-increment');
           }}
         >
           delay +
         </button>
+        <button
+          type='button'
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch('delay-multiply');
+          }}
+        >
+          delay *2
+        </button>
       </div>
-      <p>increment on global click</p>
+      <p>Increment on global click.</p>
     </div>
   );
 };

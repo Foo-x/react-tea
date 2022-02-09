@@ -1,4 +1,4 @@
-import type { Dispatch } from './Cmd';
+import type { Dispatch } from 'react';
 import type { UseTeaProps } from './useTea';
 import { useTea } from './useTea';
 

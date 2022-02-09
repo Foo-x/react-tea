@@ -1,4 +1,5 @@
-export type Dispatch<Msg> = (msg: Msg) => void;
+import type { Dispatch } from 'react';
+
 export type Action<Msg> = (dispatch: Dispatch<Msg>) => void;
 export type PromiseAction<Msg> = (dispatch: Dispatch<Msg>) => Promise<void>;
 export type Cmd<Msg> = Array<Action<Msg> | PromiseAction<Msg>>;

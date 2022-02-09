@@ -1,5 +1,5 @@
-import { EffectCallback, useEffect } from 'react';
-import { Dispatch } from './Cmd';
+import type { Dispatch, EffectCallback } from 'react';
+import { useEffect } from 'react';
 
 export type Effect<Model, Msg> = (
   model: Model,

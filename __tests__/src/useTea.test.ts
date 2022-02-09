@@ -108,6 +108,36 @@ describe('useTea', () => {
       expect(count).toBe(3);
     });
 
+    test('dispatch before cmd resolves', () => {
+      let count = 0;
+      const { result } = renderHook(() => {
+        count += 1;
+        return useTea({ init, update, subscriptions });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(1);
+
+      act(() => {
+        result.current[1]('increment-with-cmd');
+      });
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
+
+      act(() => {
+        result.current[1]('increment-with-cmd');
+      });
+      expect(result.current[0].value).toBe(2);
+      expect(count).toBe(3);
+
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(result.current[0].value).toBe(4);
+      expect(count).toBe(4);
+    });
+
     test('rerender on each cmd', () => {
       let count = 0;
       const { result } = renderHook(() => {

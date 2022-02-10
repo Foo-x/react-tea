@@ -1,5 +1,5 @@
 import { Cmd } from '@/Cmd';
-import { Sub } from '@/Sub';
+import { Effect, Sub } from '@/Sub';
 import { Init, Update, useTea } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
@@ -54,7 +54,7 @@ afterAll(() => {
 
 describe('useTea', () => {
   describe('no subscription', () => {
-    const subscriptions = Sub.none<Model, Msg>();
+    const subscriptions: Effect<Model, Msg>[] = [];
 
     test('initial model and dispatch', () => {
       const { result } = renderHook(() =>
@@ -185,18 +185,26 @@ describe('useTea', () => {
     });
   });
 
-  describe('with subscription', () => {
+  describe('with subscriptions', () => {
+    const injectProps = (
+      subscriptions: Sub<Model, Msg>
+    ): Effect<Model, Msg>[] => {
+      return subscriptions.map((sub) => sub({}));
+    };
+
     test('re-register subscription on rerender', () => {
       let count = 0;
       const { result } = renderHook(() => {
         return useTea({
           init,
           update,
-          subscriptions: Sub.of<Model, Msg>(() => [
-            () => {
-              count += 1;
-            },
-          ]),
+          subscriptions: injectProps(
+            Sub.of<Model, Msg>(() => [
+              () => {
+                count += 1;
+              },
+            ])
+          ),
         });
       });
 
@@ -217,12 +225,14 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          subscriptions: Sub.of<Model, Msg>((model) => [
-            () => {
-              count += 1;
-            },
-            [model.version],
-          ]),
+          subscriptions: injectProps(
+            Sub.of<Model, Msg>(({ model }) => [
+              () => {
+                count += 1;
+              },
+              [model.version],
+            ])
+          ),
         });
       });
 
@@ -250,12 +260,14 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          subscriptions: Sub.of<Model, Msg>(() => [
-            () => {
-              count += 1;
-            },
-            [],
-          ]),
+          subscriptions: injectProps(
+            Sub.of<Model, Msg>(() => [
+              () => {
+                count += 1;
+              },
+              [],
+            ])
+          ),
         });
       });
 

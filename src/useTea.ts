@@ -1,15 +1,15 @@
 import type { Dispatch } from 'react';
 import { useCallback, useEffect, useReducer } from 'react';
 import type { Cmd } from './Cmd';
-import { Sub } from './Sub';
+import type { Effect } from './Sub';
 
 export type Init<Model, Msg> = () => [Model, Cmd<Msg>];
 export type Update<Model, Msg> = (model: Model, msg: Msg) => [Model, Cmd<Msg>];
 
-export type UseTeaProps<Model, Msg> = {
+type UseTeaProps<Model, Msg> = {
   init: Init<Model, Msg>;
   update: Update<Model, Msg>;
-  subscriptions: Sub<Model, Msg>;
+  subscriptions: Effect<Model, Msg>[];
 };
 
 export const useTea = <Model, Msg>({

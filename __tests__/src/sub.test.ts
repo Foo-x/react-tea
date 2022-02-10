@@ -17,7 +17,7 @@ describe('Sub', () => {
       ]);
       expect(sub).toHaveLength(1);
 
-      const { rerender } = renderHook(() => sub[0](null, () => null));
+      const { rerender } = renderHook(() => sub[0]({})(null, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -27,7 +27,7 @@ describe('Sub', () => {
     it('re-register effect on deps update', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<number, null>((model) => [
+      const sub = Sub.of<number, null>(({ model }) => [
         () => {
           spy();
         },
@@ -36,7 +36,7 @@ describe('Sub', () => {
       expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub[0](model, () => null));
+      const { rerender } = renderHook(() => sub[0]({})(model, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -59,7 +59,7 @@ describe('Sub', () => {
       expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub[0](model, () => null));
+      const { rerender } = renderHook(() => sub[0]({})(model, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -71,7 +71,7 @@ describe('Sub', () => {
     });
   });
 
-  test('batch returns array with custom hooks that register effects', () => {
+  test('batch returns array of custom hooks that register effects', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
 
@@ -89,7 +89,7 @@ describe('Sub', () => {
     );
     expect(sub).toHaveLength(2);
 
-    renderHook(() => sub.forEach((subUnit) => subUnit(null, () => null)));
+    renderHook(() => sub.forEach((subUnit) => subUnit({})(null, () => null)));
     expect(spy1).toHaveBeenCalledTimes(1);
     expect(spy2).toHaveBeenCalledTimes(1);
   });

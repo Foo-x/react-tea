@@ -1,7 +1,7 @@
 import { Cmd } from '@/Cmd';
 import { Sub } from '@/Sub';
-import { Tea, WithViewProps } from '@/Tea';
-import { Init, Update } from '@/useTea';
+import { Init, Tea, WithViewProps } from '@/Tea';
+import { Update } from '@/useTea';
 import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
@@ -16,7 +16,11 @@ type Msg =
       value: number;
     };
 
-const init: Init<Model, Msg> = () => [0, Cmd.none()];
+type Props = {
+  value: number;
+};
+
+const init: Init<Model, Msg, Props> = (props) => [props.value * 10, Cmd.none()];
 
 const update: Update<Model, Msg> = (model, msg) => {
   switch (msg.type) {
@@ -29,10 +33,6 @@ const update: Update<Model, Msg> = (model, msg) => {
     default:
       return msg;
   }
-};
-
-type Props = {
-  value: number;
 };
 
 const view = ({ model, dispatch, value }: WithViewProps<Model, Msg, Props>) => {
@@ -68,11 +68,22 @@ const subscriptions: Sub<Model, Msg, Props> = Sub.of(({ dispatch, props }) => [
 const Sut = Tea({ init, view, update, subscriptions });
 
 describe('Tea', () => {
-  test('initial view', () => {
-    render(<Sut value={10} />);
+  describe('init', () => {
+    test('initial', () => {
+      render(<Sut value={10} />);
 
-    expect(screen.getByRole('button')).toHaveTextContent('0');
-    expect(screen.getByRole('note')).toHaveTextContent('10');
+      expect(screen.getByRole('button')).toHaveTextContent(/^100$/);
+      expect(screen.getByRole('note')).toHaveTextContent(/^10$/);
+    });
+
+    it('is not re-invoked on props change', () => {
+      const { rerender } = render(<Sut value={10} />);
+
+      rerender(<Sut value={20} />);
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveTextContent(/^100$/);
+    });
   });
 
   describe('update', () => {
@@ -83,27 +94,35 @@ describe('Tea', () => {
       act(() => {
         button.click();
       });
-
-      expect(screen.getByRole('button')).toHaveTextContent('1');
+      expect(button).toHaveTextContent(/^101$/);
     });
 
     test('on subscription event', () => {
-      const { rerender } = render(<Sut value={10} />);
+      render(<Sut value={10} />);
 
       const note = screen.getByRole('note');
       act(() => {
         note.click();
       });
 
-      expect(screen.getByRole('button')).toHaveTextContent('10');
+      const button = screen.getByRole('button');
+      expect(button).toHaveTextContent(/^110$/);
+    });
+  });
+
+  describe('subscriptions', () => {
+    it('is updated on props change', () => {
+      const { rerender } = render(<Sut value={10} />);
 
       rerender(<Sut value={20} />);
 
+      const note = screen.getByRole('note');
       act(() => {
         note.click();
       });
 
-      expect(screen.getByRole('button')).toHaveTextContent('30');
+      const button = screen.getByRole('button');
+      expect(button).toHaveTextContent(/^120$/);
     });
   });
 });

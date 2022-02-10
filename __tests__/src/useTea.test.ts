@@ -1,6 +1,6 @@
 import { Cmd } from '@/Cmd';
 import { Effect, Sub } from '@/Sub';
-import { Init, Update, useTea } from '@/useTea';
+import { Update, useTea, UseTeaInit } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
 type Model = { value: number; version: number };
@@ -11,7 +11,10 @@ type Msg =
   | 'increment-with-batch'
   | 'increment-with-same-version';
 
-const init: Init<Model, Msg> = () => [{ value: 0, version: 0 }, Cmd.none()];
+const init: UseTeaInit<Model, Msg> = () => [
+  { value: 0, version: 0 },
+  Cmd.none(),
+];
 
 const update: Update<Model, Msg> = (model, msg) => {
   switch (msg) {
@@ -78,7 +81,6 @@ describe('useTea', () => {
       act(() => {
         result.current[1]('increment');
       });
-
       expect(result.current[0].value).toBe(1);
       expect(count).toBe(2);
     });
@@ -96,14 +98,12 @@ describe('useTea', () => {
       act(() => {
         result.current[1]('increment-with-cmd');
       });
-
       expect(result.current[0].value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
         jest.runAllTimers();
       });
-
       expect(result.current[0].value).toBe(2);
       expect(count).toBe(3);
     });
@@ -214,7 +214,6 @@ describe('useTea', () => {
       act(() => {
         result.current[1]('increment-with-same-version');
       });
-
       expect(result.current[0].value).toBe(1);
       expect(count).toBe(2);
     });
@@ -242,14 +241,12 @@ describe('useTea', () => {
       act(() => {
         result.current[1]('increment');
       });
-
       expect(result.current[0].value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
         result.current[1]('increment-with-same-version');
       });
-
       expect(result.current[0].value).toBe(2);
       expect(count).toBe(2);
     });
@@ -277,9 +274,40 @@ describe('useTea', () => {
       act(() => {
         result.current[1]('increment');
       });
-
       expect(result.current[0].value).toBe(1);
       expect(count).toBe(1);
+    });
+
+    test('cleanup function is invoked on unmount', () => {
+      let count = 0;
+      const { result, unmount } = renderHook(() => {
+        return useTea({
+          init,
+          update,
+          subscriptions: injectProps(
+            Sub.of<Model, Msg>(() => [
+              () => {
+                return () => {
+                  count += 1;
+                };
+              },
+            ])
+          ),
+        });
+      });
+
+      expect(result.current[0].value).toBe(0);
+      expect(count).toBe(0);
+
+      act(() => {
+        result.current[1]('increment-with-same-version');
+      });
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(1);
+
+      unmount();
+      expect(result.current[0].value).toBe(1);
+      expect(count).toBe(2);
     });
   });
 });

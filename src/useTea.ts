@@ -3,11 +3,11 @@ import { useCallback, useEffect, useReducer } from 'react';
 import type { Cmd } from './Cmd';
 import type { Effect } from './Sub';
 
-export type Init<Model, Msg> = () => [Model, Cmd<Msg>];
+export type UseTeaInit<Model, Msg> = () => [Model, Cmd<Msg>];
 export type Update<Model, Msg> = (model: Model, msg: Msg) => [Model, Cmd<Msg>];
 
 type UseTeaProps<Model, Msg> = {
-  init: Init<Model, Msg>;
+  init: UseTeaInit<Model, Msg>;
   update: Update<Model, Msg>;
   subscriptions: Effect<Model, Msg>[];
 };

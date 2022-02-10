@@ -1,7 +1,7 @@
 import type { Dispatch, EffectCallback } from 'react';
 import { useEffect } from 'react';
 
-type NoProps = {
+export type NoProps = {
   readonly _NoPropsBrand: unique symbol;
 };
 

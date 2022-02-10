@@ -33,28 +33,15 @@ export const update: Update<Model, Msg> = (model, msg) => {
   }
 };
 
-export const subscriptions: Sub<Model, Msg> = Sub.of((model, dispatch) => [
-  () => {
-    const listener = () => {
-      dispatch('increment');
-    };
-    document.addEventListener('click', listener);
-    return () => {
-      document.removeEventListener('click', listener);
-    };
-  },
-  [],
-]);
+type Props = {
+  label: string;
+};
 
-type Props = WithViewProps<
-  Model,
-  Msg,
-  {
-    label: string;
-  }
->;
-
-export const view = ({ model, dispatch, label }: Props) => {
+export const view = ({
+  model,
+  dispatch,
+  label,
+}: WithViewProps<Model, Msg, Props>) => {
   return (
     <div style={{ margin: '5rem auto', maxWidth: '300px' }}>
       <h2>{label}</h2>
@@ -110,6 +97,19 @@ export const view = ({ model, dispatch, label }: Props) => {
     </div>
   );
 };
+
+export const subscriptions: Sub<Model, Msg, Props> = Sub.of(({ dispatch }) => [
+  () => {
+    const listener = () => {
+      dispatch('increment');
+    };
+    document.addEventListener('click', listener);
+    return () => {
+      document.removeEventListener('click', listener);
+    };
+  },
+  [],
+]);
 
 const Counter = Tea({ init, view, update, subscriptions });
 

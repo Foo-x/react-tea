@@ -189,7 +189,7 @@ describe('useTea', () => {
     const injectProps = (
       subscriptions: Sub<Model, Msg>
     ): Effect<Model, Msg>[] => {
-      return subscriptions.map((sub) => sub({}));
+      return subscriptions.map((sub) => sub());
     };
 
     test('re-register subscription on rerender', () => {

@@ -1,25 +1,25 @@
 import type { Dispatch, EffectCallback } from 'react';
 import { useEffect } from 'react';
 
+type NoProps = {
+  readonly _NoPropsBrand: unique symbol;
+};
+
 export type Effect<Model, Msg> = (
   model: Model,
   dispatch: Dispatch<Msg>
 ) => void;
-export type EffectWithProps<Model, Msg, Props = Record<string, never>> = (
-  props: Props
-) => Effect<Model, Msg>;
+export type EffectWithProps<Model, Msg, Props = NoProps> = Props extends NoProps
+  ? () => Effect<Model, Msg>
+  : (props: Props) => Effect<Model, Msg>;
 
-export type Sub<Model, Msg, Props = Record<string, never>> = EffectWithProps<
+export type Sub<Model, Msg, Props = NoProps> = EffectWithProps<
   Model,
   Msg,
   Props
 >[];
 
-export type EffectorProps<
-  Model,
-  Msg,
-  Props = Record<string, never>
-> = Props extends Record<string, never>
+export type EffectorProps<Model, Msg, Props = NoProps> = Props extends NoProps
   ? {
       model: Model;
       dispatch: Dispatch<Msg>;
@@ -29,19 +29,15 @@ export type EffectorProps<
       dispatch: Dispatch<Msg>;
       props: Props;
     };
-export type Effector<Model, Msg, Props = Record<string, never>> = (
+export type Effector<Model, Msg, Props = NoProps> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
 
-const none = <Model, Msg, Props = Record<string, never>>(): Sub<
-  Model,
-  Msg,
-  Props
-> => {
+const none = <Model, Msg, Props = NoProps>(): Sub<Model, Msg, Props> => {
   return [];
 };
 
-const of = <Model, Msg, Props = Record<string, never>>(
+const of = <Model, Msg, Props = NoProps>(
   effector: Effector<Model, Msg, Props>
 ): Sub<Model, Msg, Props> => {
   const useSub = (props: Props) => {
@@ -56,10 +52,10 @@ const of = <Model, Msg, Props = Record<string, never>>(
     };
     return useSubWithProps;
   };
-  return [useSub];
+  return [useSub] as Sub<Model, Msg, Props>;
 };
 
-const batch = <Model, Msg, Props = Record<string, never>>(
+const batch = <Model, Msg, Props = NoProps>(
   ...subs: Sub<Model, Msg, Props>[]
 ): Sub<Model, Msg, Props> => {
   return subs.flat() as Sub<Model, Msg, Props>;

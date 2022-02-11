@@ -1,5 +1,5 @@
 import { Cmd } from '@/Cmd';
-import { Effect, EffectWithProps, Sub } from '@/Sub';
+import { Effect, Sub } from '@/Sub';
 import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
@@ -186,25 +186,19 @@ describe('useTea', () => {
   });
 
   describe('with subscriptions', () => {
-    const injectProps = (
-      subscriptions: EffectWithProps<Model, Msg>
-    ): Effect<Model, Msg>[] => {
-      return [subscriptions()];
-    };
-
     test('re-register subscription on rerender', () => {
       let count = 0;
       const { result } = renderHook(() => {
         return useTea({
           init,
           update,
-          subscriptions: injectProps(
+          subscriptions: [
             Sub.of<Model, Msg>(() => [
               () => {
                 count += 1;
               },
-            ])
-          ),
+            ]),
+          ],
         });
       });
 
@@ -224,14 +218,14 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          subscriptions: injectProps(
+          subscriptions: [
             Sub.of<Model, Msg>(({ model }) => [
               () => {
                 count += 1;
               },
               [model.version],
-            ])
-          ),
+            ]),
+          ],
         });
       });
 
@@ -257,14 +251,14 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          subscriptions: injectProps(
+          subscriptions: [
             Sub.of<Model, Msg>(() => [
               () => {
                 count += 1;
               },
               [],
-            ])
-          ),
+            ]),
+          ],
         });
       });
 
@@ -284,15 +278,15 @@ describe('useTea', () => {
         return useTea({
           init,
           update,
-          subscriptions: injectProps(
+          subscriptions: [
             Sub.of<Model, Msg>(() => [
               () => {
                 return () => {
                   count += 1;
                 };
               },
-            ])
-          ),
+            ]),
+          ],
         });
       });
 

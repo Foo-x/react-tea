@@ -18,8 +18,6 @@ describe('Cmd', () => {
   test('delay returns function that runs setTimeout', () => {
     const cmd = Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100);
 
-    expect(cmd).toHaveLength(1);
-
     const dispatch = jest.fn();
     cmd(dispatch);
 
@@ -35,8 +33,6 @@ describe('Cmd', () => {
       await Promise.resolve();
       dispatch('msg');
     });
-
-    expect(cmd).toHaveLength(1);
 
     const dispatch = jest.fn();
     await cmd(dispatch);

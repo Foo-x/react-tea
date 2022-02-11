@@ -1,6 +1,6 @@
 import { Dispatch, useCallback } from 'react';
 import type { Cmd } from './Cmd';
-import type { NoProps, Sub } from './Sub';
+import type { EffectorProps, NoProps, Sub } from './Sub';
 import type { UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
 
@@ -55,11 +55,24 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
         return [];
       }
       if (Array.isArray(subscriptionsWithoutProps)) {
-        return subscriptionsWithoutProps.map((sub) =>
-          sub(propsWithoutViewProps)
+        return subscriptionsWithoutProps.map(
+          (sub) =>
+            ({ model, dispatch }: EffectorProps<Model, Msg>) =>
+              sub({
+                model,
+                dispatch,
+                props: propsWithoutViewProps,
+              } as EffectorProps<Model, Msg, WithoutViewProps<Props>>)
         );
       }
-      return [subscriptionsWithoutProps(propsWithoutViewProps)];
+      return [
+        ({ model, dispatch }: EffectorProps<Model, Msg>) =>
+          subscriptionsWithoutProps({
+            model,
+            dispatch,
+            props: propsWithoutViewProps,
+          } as EffectorProps<Model, Msg, WithoutViewProps<Props>>),
+      ];
     })();
     const [model, dispatch] = useTea({ init, update, subscriptions });
 

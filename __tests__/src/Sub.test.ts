@@ -15,9 +15,28 @@ describe('Sub', () => {
           spy();
         },
       ]);
-      expect(sub).toHaveLength(1);
 
-      const { rerender } = renderHook(() => sub()(null, () => null));
+      const { rerender } = renderHook(() =>
+        sub({ model: null, dispatch: () => null })
+      );
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      rerender();
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('returns array with custom hook that register effect with props', () => {
+      const spy = jest.fn();
+
+      const sub = Sub.of<null, null, null>(() => [
+        () => {
+          spy();
+        },
+      ]);
+
+      const { rerender } = renderHook(() =>
+        sub({ model: null, dispatch: () => null, props: null })
+      );
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -33,10 +52,11 @@ describe('Sub', () => {
         },
         [model],
       ]);
-      expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub()(model, () => null));
+      const { rerender } = renderHook(() =>
+        sub({ model, dispatch: () => null })
+      );
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -56,10 +76,11 @@ describe('Sub', () => {
         },
         [],
       ]);
-      expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub()(model, () => null));
+      const { rerender } = renderHook(() =>
+        sub({ model, dispatch: () => null })
+      );
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -89,7 +110,9 @@ describe('Sub', () => {
     );
     expect(sub).toHaveLength(2);
 
-    renderHook(() => sub.forEach((subUnit) => subUnit()(null, () => null)));
+    renderHook(() =>
+      sub.forEach((subUnit) => subUnit({ model: null, dispatch: () => null }))
+    );
     expect(spy1).toHaveBeenCalledTimes(1);
     expect(spy2).toHaveBeenCalledTimes(1);
   });

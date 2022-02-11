@@ -7,19 +7,6 @@ export type NoProps = {
 
 export const subNoneSymbol = Symbol('Sub.none');
 
-export type Effect<Model, Msg> = (
-  model: Model,
-  dispatch: Dispatch<Msg>
-) => void;
-export type EffectWithProps<Model, Msg, Props = NoProps> = Props extends NoProps
-  ? () => Effect<Model, Msg>
-  : (props: Props) => Effect<Model, Msg>;
-
-export type Sub<Model, Msg, Props = NoProps> =
-  | EffectWithProps<Model, Msg, Props>
-  | EffectWithProps<Model, Msg, Props>[]
-  | typeof subNoneSymbol;
-
 export type EffectorProps<Model, Msg, Props = NoProps> = Props extends NoProps
   ? {
       model: Model;
@@ -33,6 +20,14 @@ export type EffectorProps<Model, Msg, Props = NoProps> = Props extends NoProps
 export type Effector<Model, Msg, Props = NoProps> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
+export type Effect<Model, Msg, Props = NoProps> = (
+  effectProps: EffectorProps<Model, Msg, Props>
+) => void;
+
+export type Sub<Model, Msg, Props = NoProps> =
+  | Effect<Model, Msg, Props>
+  | Effect<Model, Msg, Props>[]
+  | typeof subNoneSymbol;
 
 const none = (): typeof subNoneSymbol => {
   return subNoneSymbol;
@@ -40,25 +35,26 @@ const none = (): typeof subNoneSymbol => {
 
 const of = <Model, Msg, Props = NoProps>(
   effector: Effector<Model, Msg, Props>
-): EffectWithProps<Model, Msg, Props> => {
-  const useSub = (props: Props) => {
-    const useSubWithProps = (model: Model, dispatch: Dispatch<Msg>) => {
-      const [effect, deps] = effector({
-        model,
-        dispatch,
-        props,
-      } as EffectorProps<Model, Msg, Props>);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      useEffect(effect, deps);
-    };
-    return useSubWithProps;
+): Effect<Model, Msg, Props> => {
+  const useSub = ({
+    model,
+    dispatch,
+    props,
+  }: EffectorProps<Model, Msg> & { props: Props }) => {
+    const [effect, deps] = effector({
+      model,
+      dispatch,
+      props,
+    } as EffectorProps<Model, Msg, Props>);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(effect, deps);
   };
-  return useSub as EffectWithProps<Model, Msg, Props>;
+  return useSub as Effect<Model, Msg, Props>;
 };
 
 const batch = <Model, Msg, Props = NoProps>(
-  ...subs: EffectWithProps<Model, Msg, Props>[]
-): EffectWithProps<Model, Msg, Props>[] => {
+  ...subs: Effect<Model, Msg, Props>[]
+): Effect<Model, Msg, Props>[] => {
   return subs;
 };
 

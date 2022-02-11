@@ -46,7 +46,7 @@ export const useTea = <Model, Msg>({
     cmd.forEach((cmdUnit) => cmdUnit(dispatch));
   }, [cmd]);
 
-  subscriptions.forEach((sub) => sub(model, dispatch));
+  subscriptions.forEach((sub) => sub({ model, dispatch }));
 
   return [model, dispatch];
 };

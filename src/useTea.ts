@@ -34,7 +34,9 @@ export const useTea = <Model, Msg>({
   const [[model, cmd], dispatch] = useReducer(reducer, undefined, init);
 
   useEffect(() => {
-    if (cmd.length === 0) {
+    if (!Array.isArray(cmd)) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      cmd(dispatch);
       return;
     }
 

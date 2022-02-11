@@ -11,17 +11,17 @@ afterAll(() => {
 });
 
 describe('Cmd', () => {
-  test('none returns empty array', () => {
-    expect(Cmd.none()).toEqual([]);
+  test('none returns empty function', () => {
+    expect(Cmd.none()).toBeInstanceOf(Function);
   });
 
-  test('delay returns array with cmd that runs setTimeout', async () => {
+  test('delay returns function that runs setTimeout', () => {
     const cmd = Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100);
 
     expect(cmd).toHaveLength(1);
 
     const dispatch = jest.fn();
-    await cmd[0](dispatch);
+    cmd(dispatch);
 
     expect(dispatch).not.toBeCalled();
 
@@ -30,7 +30,7 @@ describe('Cmd', () => {
     expect(dispatch).toBeCalledWith('msg');
   });
 
-  test('promise returns array with cmd that runs promise', async () => {
+  test('promise returns function that runs promise', async () => {
     const cmd = Cmd.promise<Msg>(async (dispatch) => {
       await Promise.resolve();
       dispatch('msg');
@@ -39,7 +39,7 @@ describe('Cmd', () => {
     expect(cmd).toHaveLength(1);
 
     const dispatch = jest.fn();
-    await cmd[0](dispatch);
+    await cmd(dispatch);
 
     expect(dispatch).toBeCalledWith('msg');
   });

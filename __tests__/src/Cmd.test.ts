@@ -15,15 +15,16 @@ describe('Cmd', () => {
     expect(Cmd.none()).toBe(cmdNoneSymbol);
   });
 
-  test('delay returns function that runs setTimeout', () => {
+  test('delay returns function that runs setTimeout', async () => {
     const cmd = Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100);
 
     const dispatch = jest.fn();
-    cmd(dispatch);
+    const delayPromise = cmd(dispatch);
 
     expect(dispatch).not.toBeCalled();
 
     jest.runAllTimers();
+    await delayPromise;
 
     expect(dispatch).toBeCalledWith('msg');
   });
@@ -42,7 +43,7 @@ describe('Cmd', () => {
 
   test('batch returns array with cmds', async () => {
     const cmd = Cmd.batch<Msg>(
-      Cmd.delay<Msg>((dispatch) => dispatch('msg'), 100),
+      Cmd.delay((dispatch) => dispatch('msg'), 100),
       Cmd.promise(async (dispatch) => {
         await Promise.resolve();
         dispatch('msg2');
@@ -52,11 +53,12 @@ describe('Cmd', () => {
     expect(cmd).toHaveLength(2);
 
     const dispatch = jest.fn();
-    await cmd[0](dispatch);
+    const delayPromise = cmd[0](dispatch);
 
     expect(dispatch).not.toBeCalled();
 
     jest.runAllTimers();
+    await delayPromise;
 
     expect(dispatch).toBeCalledWith('msg');
 

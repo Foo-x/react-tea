@@ -5,17 +5,25 @@ export const cmdNoneSymbol = Symbol('Cmd.none');
 export type Action<Msg> = (dispatch: Dispatch<Msg>) => void;
 export type PromiseAction<Msg> = (dispatch: Dispatch<Msg>) => Promise<void>;
 export type Cmd<Msg> =
-  | Action<Msg>
   | PromiseAction<Msg>
-  | Array<Action<Msg> | PromiseAction<Msg>>
+  | PromiseAction<Msg>[]
   | typeof cmdNoneSymbol;
 
 const none = (): typeof cmdNoneSymbol => {
   return cmdNoneSymbol;
 };
 
-const delay = <Msg>(action: Action<Msg>, timeout: number): Action<Msg> => {
-  return (dispatch) => setTimeout(() => action(dispatch), timeout);
+const delay = <Msg>(
+  action: Action<Msg>,
+  timeout: number
+): PromiseAction<Msg> => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        action(dispatch);
+        resolve();
+      }, timeout);
+    });
 };
 
 const promise = <Msg>(
@@ -24,9 +32,7 @@ const promise = <Msg>(
   return promiseAction;
 };
 
-const batch = <Msg>(
-  ...cmds: Array<Action<Msg> | PromiseAction<Msg>>
-): Array<Action<Msg> | PromiseAction<Msg>> => {
+const batch = <Msg>(...cmds: PromiseAction<Msg>[]): PromiseAction<Msg>[] => {
   return cmds;
 };
 

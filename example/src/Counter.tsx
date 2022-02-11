@@ -4,17 +4,29 @@ type Model = number;
 
 type Msg =
   | 'increment'
+  | 'increment-with-default-value'
   | 'decrement'
   | 'multiply'
   | 'delay-increment'
   | 'delay-multiply';
 
-export const init: Init<Model, Msg> = () => [0, Cmd.none()];
+type Props = {
+  label: string;
+  defaultValue: number;
+};
 
-export const update: Update<Model, Msg> = (model, msg) => {
+export const init: Init<Model, Msg, Props> = ({ props }) => [
+  props.defaultValue,
+  Cmd.none(),
+];
+
+export const update: Update<Model, Msg, Props> = ({ model, msg, props }) => {
   switch (msg) {
     case 'increment':
       return [model + 1, Cmd.none()];
+
+    case 'increment-with-default-value':
+      return [model + props.defaultValue, Cmd.none()];
 
     case 'decrement':
       return [model - 1, Cmd.none()];
@@ -33,18 +45,16 @@ export const update: Update<Model, Msg> = (model, msg) => {
   }
 };
 
-type Props = {
-  label: string;
-};
-
 export const view = ({
   model,
   dispatch,
   label,
+  defaultValue,
 }: WithViewProps<Model, Msg, Props>) => {
   return (
-    <div style={{ margin: '5rem auto', maxWidth: '300px' }}>
+    <div style={{ margin: '5rem auto', maxWidth: '400px' }}>
       <h2>{label}</h2>
+      <h3>default: {defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type='button'
@@ -64,6 +74,15 @@ export const view = ({
           }}
         >
           +
+        </button>
+        <button
+          type='button'
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch('increment-with-default-value');
+          }}
+        >
+          + default
         </button>
         <button
           type='button'

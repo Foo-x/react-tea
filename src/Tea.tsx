@@ -1,23 +1,23 @@
 import { Dispatch, useCallback } from 'react';
 import type { Cmd } from './Cmd';
-import type { EffectorProps, NoProps, Sub } from './Sub';
+import type { EffectorProps, Sub } from './Sub';
 import type { UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
 
-export type InitProps<Props = NoProps> = {
+export type InitProps<Props = never> = {
   props: Props;
 };
-export type Init<Model, Msg, Props = NoProps> = (
+export type Init<Model, Msg, Props = never> = (
   initProps: InitProps<Props>
 ) => [Model, Cmd<Msg>];
 
-export type UpdateProps<Model, Msg, Props = NoProps> = UseTeaUpdateProps<
+export type UpdateProps<Model, Msg, Props = never> = UseTeaUpdateProps<
   Model,
   Msg
 > & {
   props: Props;
 };
-export type Update<Model, Msg, Props = NoProps> = (
+export type Update<Model, Msg, Props = never> = (
   updateProps: UpdateProps<Model, Msg, Props>
 ) => [Model, Cmd<Msg>];
 
@@ -26,7 +26,7 @@ export type ViewProps<Model, Msg> = {
   dispatch: Dispatch<Msg>;
 };
 
-export type WithViewProps<Model, Msg, Props = NoProps> = ViewProps<Model, Msg> &
+export type WithViewProps<Model, Msg, Props = never> = ViewProps<Model, Msg> &
   Props;
 export type WithoutViewProps<Props> = Omit<Props, 'model' | 'dispatch'>;
 

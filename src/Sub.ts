@@ -13,11 +13,10 @@ export type EffectWithProps<Model, Msg, Props = NoProps> = Props extends NoProps
   ? () => Effect<Model, Msg>
   : (props: Props) => Effect<Model, Msg>;
 
-export type Sub<Model, Msg, Props = NoProps> = EffectWithProps<
-  Model,
-  Msg,
-  Props
->[];
+export type Sub<Model, Msg, Props = NoProps> =
+  | EffectWithProps<Model, Msg, Props>
+  | EffectWithProps<Model, Msg, Props>[]
+  | null;
 
 export type EffectorProps<Model, Msg, Props = NoProps> = Props extends NoProps
   ? {
@@ -33,13 +32,13 @@ export type Effector<Model, Msg, Props = NoProps> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
 
-const none = <Model, Msg, Props = NoProps>(): Sub<Model, Msg, Props> => {
-  return [];
+const none = () => {
+  return null;
 };
 
 const of = <Model, Msg, Props = NoProps>(
   effector: Effector<Model, Msg, Props>
-): Sub<Model, Msg, Props> => {
+): EffectWithProps<Model, Msg, Props> => {
   const useSub = (props: Props) => {
     const useSubWithProps = (model: Model, dispatch: Dispatch<Msg>) => {
       const [effect, deps] = effector({
@@ -52,13 +51,13 @@ const of = <Model, Msg, Props = NoProps>(
     };
     return useSubWithProps;
   };
-  return [useSub] as Sub<Model, Msg, Props>;
+  return useSub as EffectWithProps<Model, Msg, Props>;
 };
 
 const batch = <Model, Msg, Props = NoProps>(
-  ...subs: Sub<Model, Msg, Props>[]
-): Sub<Model, Msg, Props> => {
-  return subs.flat() as Sub<Model, Msg, Props>;
+  ...subs: EffectWithProps<Model, Msg, Props>[]
+): EffectWithProps<Model, Msg, Props>[] => {
+  return subs;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

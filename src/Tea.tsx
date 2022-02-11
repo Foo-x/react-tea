@@ -50,9 +50,17 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
         updateWithoutProps({ model, msg, props: propsWithoutViewProps }),
       [propsWithoutViewProps]
     );
-    const subscriptions = subscriptionsWithoutProps.map((sub) =>
-      sub(propsWithoutViewProps)
-    );
+    const subscriptions = (() => {
+      if (subscriptionsWithoutProps == null) {
+        return [];
+      }
+      if (Array.isArray(subscriptionsWithoutProps)) {
+        return subscriptionsWithoutProps.map((sub) =>
+          sub(propsWithoutViewProps)
+        );
+      }
+      return [subscriptionsWithoutProps(propsWithoutViewProps)];
+    })();
     const [model, dispatch] = useTea({ init, update, subscriptions });
 
     const props = { ...propsWithoutViewProps, model, dispatch } as Props;

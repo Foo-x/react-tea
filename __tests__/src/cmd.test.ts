@@ -11,7 +11,7 @@ afterAll(() => {
 });
 
 describe('Cmd', () => {
-  test('none returns empty function', () => {
+  test('none returns null', () => {
     expect(Cmd.none()).toBeNull();
   });
 

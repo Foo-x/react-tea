@@ -2,8 +2,8 @@ import { Sub } from '@/Sub';
 import { renderHook } from '@testing-library/react-hooks';
 
 describe('Sub', () => {
-  test('none returns empty array', () => {
-    expect(Sub.none()).toEqual([]);
+  test('none returns null', () => {
+    expect(Sub.none()).toBeNull();
   });
 
   describe('of', () => {
@@ -17,7 +17,7 @@ describe('Sub', () => {
       ]);
       expect(sub).toHaveLength(1);
 
-      const { rerender } = renderHook(() => sub[0]()(null, () => null));
+      const { rerender } = renderHook(() => sub()(null, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -36,7 +36,7 @@ describe('Sub', () => {
       expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub[0]()(model, () => null));
+      const { rerender } = renderHook(() => sub()(model, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();
@@ -59,7 +59,7 @@ describe('Sub', () => {
       expect(sub).toHaveLength(1);
 
       let model = 0;
-      const { rerender } = renderHook(() => sub[0]()(model, () => null));
+      const { rerender } = renderHook(() => sub()(model, () => null));
       expect(spy).toHaveBeenCalledTimes(1);
 
       rerender();

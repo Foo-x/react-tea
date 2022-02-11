@@ -1,5 +1,5 @@
 import { Cmd } from '@/Cmd';
-import { Effect, Sub } from '@/Sub';
+import { Effect, EffectWithProps, Sub } from '@/Sub';
 import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
@@ -187,9 +187,9 @@ describe('useTea', () => {
 
   describe('with subscriptions', () => {
     const injectProps = (
-      subscriptions: Sub<Model, Msg>
+      subscriptions: EffectWithProps<Model, Msg>
     ): Effect<Model, Msg>[] => {
-      return subscriptions.map((sub) => sub());
+      return [subscriptions()];
     };
 
     test('re-register subscription on rerender', () => {

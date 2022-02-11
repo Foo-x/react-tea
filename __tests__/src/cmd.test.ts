@@ -12,7 +12,7 @@ afterAll(() => {
 
 describe('Cmd', () => {
   test('none returns empty function', () => {
-    expect(Cmd.none()).toBeInstanceOf(Function);
+    expect(Cmd.none()).toBeNull();
   });
 
   test('delay returns function that runs setTimeout', () => {

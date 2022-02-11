@@ -5,12 +5,11 @@ export type PromiseAction<Msg> = (dispatch: Dispatch<Msg>) => Promise<void>;
 export type Cmd<Msg> =
   | Action<Msg>
   | PromiseAction<Msg>
-  | Array<Action<Msg> | PromiseAction<Msg>>;
+  | Array<Action<Msg> | PromiseAction<Msg>>
+  | null;
 
-const none = <Msg>(): Action<Msg> => {
-  return () => {
-    // NoOp
-  };
+const none = () => {
+  return null;
 };
 
 const delay = <Msg>(action: Action<Msg>, timeout: number): Action<Msg> => {

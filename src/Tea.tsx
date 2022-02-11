@@ -33,15 +33,15 @@ export type WithoutViewProps<Props> = Omit<Props, 'model' | 'dispatch'>;
 export type TeaProps<Model, Msg, Props extends ViewProps<Model, Msg>> = {
   init: Init<Model, Msg, WithoutViewProps<Props>>;
   update: Update<Model, Msg, WithoutViewProps<Props>>;
-  view: React.VFC<Props>;
   subscriptions: Sub<Model, Msg, WithoutViewProps<Props>>;
+  view: React.VFC<Props>;
 };
 
 export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
   init: initWithoutProps,
   update: updateWithoutProps,
-  view,
   subscriptions: subscriptionsWithoutProps,
+  view,
 }: TeaProps<Model, Msg, Props>) => {
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
     const init = () => initWithoutProps({ props: propsWithoutViewProps });

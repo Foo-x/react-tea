@@ -1,6 +1,6 @@
 import { Cmd } from '@/Cmd';
 import { Effect, Sub } from '@/Sub';
-import { Update, useTea, UseTeaInit } from '@/useTea';
+import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
 import { act, renderHook } from '@testing-library/react-hooks';
 
 type Model = { value: number; version: number };
@@ -16,7 +16,7 @@ const init: UseTeaInit<Model, Msg> = () => [
   Cmd.none(),
 ];
 
-const update: Update<Model, Msg> = (model, msg) => {
+const update: UseTeaUpdate<Model, Msg> = ({ model, msg }) => {
   switch (msg) {
     case 'increment':
       return [

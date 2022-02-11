@@ -4,8 +4,9 @@ export {
   Init,
   Tea,
   TeaProps,
+  Update,
+  UpdateProps,
   ViewProps,
   WithoutViewProps,
   WithViewProps,
 } from './Tea';
-export { Update } from './useTea';

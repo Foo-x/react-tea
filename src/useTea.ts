@@ -4,11 +4,18 @@ import type { Cmd } from './Cmd';
 import type { Effect } from './Sub';
 
 export type UseTeaInit<Model, Msg> = () => [Model, Cmd<Msg>];
-export type Update<Model, Msg> = (model: Model, msg: Msg) => [Model, Cmd<Msg>];
+
+export type UseTeaUpdateProps<Model, Msg> = {
+  model: Model;
+  msg: Msg;
+};
+export type UseTeaUpdate<Model, Msg> = (
+  useTeaUpdateProps: UseTeaUpdateProps<Model, Msg>
+) => [Model, Cmd<Msg>];
 
 type UseTeaProps<Model, Msg> = {
   init: UseTeaInit<Model, Msg>;
-  update: Update<Model, Msg>;
+  update: UseTeaUpdate<Model, Msg>;
   subscriptions: Effect<Model, Msg>[];
 };
 
@@ -19,7 +26,7 @@ export const useTea = <Model, Msg>({
 }: UseTeaProps<Model, Msg>): [Model, Dispatch<Msg>] => {
   const reducer = useCallback(
     ([model]: [Model, Cmd<Msg>], msg: Msg): [Model, Cmd<Msg>] => {
-      return update(model, msg);
+      return update({ model, msg });
     },
     [update]
   );

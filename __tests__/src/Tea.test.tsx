@@ -1,7 +1,6 @@
 import { Cmd } from '@/Cmd';
 import { Sub } from '@/Sub';
-import { Init, Tea, WithViewProps } from '@/Tea';
-import { Update } from '@/useTea';
+import { Init, Tea, Update, WithViewProps } from '@/Tea';
 import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
@@ -10,6 +9,9 @@ type Model = number;
 type Msg =
   | {
       type: 'increment';
+    }
+  | {
+      type: 'increment-props';
     }
   | {
       type: 'add';
@@ -22,10 +24,13 @@ type Props = {
 
 const init: Init<Model, Msg, Props> = (props) => [props.value * 10, Cmd.none()];
 
-const update: Update<Model, Msg> = (model, msg) => {
+const update: Update<Model, Msg, Props> = ({ model, msg, props }) => {
   switch (msg.type) {
     case 'increment':
       return [model + 1, Cmd.none()];
+
+    case 'increment-props':
+      return [model + props.value * 100, Cmd.none()];
 
     case 'add':
       return [model + msg.value, Cmd.none()];
@@ -45,9 +50,19 @@ const view = ({ model, dispatch, value }: WithViewProps<Model, Msg, Props>) => {
           dispatch({ type: 'increment' });
         }}
       >
-        {model}
+        increment
       </button>
-      <div role='note'>{value}</div>
+      <button
+        type='button'
+        onClick={(e) => {
+          e.stopPropagation();
+          dispatch({ type: 'increment-props' });
+        }}
+      >
+        increment-props
+      </button>
+      <div data-testid='model'>{model}</div>
+      <div data-testid='value'>{value}</div>
     </div>
   );
 };
@@ -72,8 +87,8 @@ describe('Tea', () => {
     test('initial', () => {
       render(<Sut value={10} />);
 
-      expect(screen.getByRole('button')).toHaveTextContent(/^100$/);
-      expect(screen.getByRole('note')).toHaveTextContent(/^10$/);
+      expect(screen.getByTestId('model')).toHaveTextContent(/^100$/);
+      expect(screen.getByTestId('value')).toHaveTextContent(/^10$/);
     });
 
     it('is not re-invoked on props change', () => {
@@ -81,32 +96,50 @@ describe('Tea', () => {
 
       rerender(<Sut value={20} />);
 
-      const button = screen.getByRole('button');
-      expect(button).toHaveTextContent(/^100$/);
+      expect(screen.getByTestId('model')).toHaveTextContent(/^100$/);
     });
   });
 
   describe('update', () => {
-    test('on element event', () => {
+    test('on element event - increment', () => {
       render(<Sut value={10} />);
 
-      const button = screen.getByRole('button');
+      const increment = screen.getByText('increment');
       act(() => {
-        button.click();
+        increment.click();
       });
-      expect(button).toHaveTextContent(/^101$/);
+      expect(screen.getByTestId('model')).toHaveTextContent(/^101$/);
+    });
+
+    test('on element event - increment-props', () => {
+      render(<Sut value={10} />);
+
+      const incrementProps = screen.getByText('increment-props');
+      act(() => {
+        incrementProps.click();
+      });
+      expect(screen.getByTestId('model')).toHaveTextContent(/^1100$/);
     });
 
     test('on subscription event', () => {
       render(<Sut value={10} />);
 
-      const note = screen.getByRole('note');
       act(() => {
-        note.click();
+        document.body.click();
       });
+      expect(screen.getByTestId('model')).toHaveTextContent(/^110$/);
+    });
 
-      const button = screen.getByRole('button');
-      expect(button).toHaveTextContent(/^110$/);
+    it('is updated on props change', () => {
+      const { rerender } = render(<Sut value={10} />);
+
+      rerender(<Sut value={20} />);
+
+      const incrementProps = screen.getByText('increment-props');
+      act(() => {
+        incrementProps.click();
+      });
+      expect(screen.getByTestId('model')).toHaveTextContent(/^2100$/);
     });
   });
 
@@ -116,13 +149,10 @@ describe('Tea', () => {
 
       rerender(<Sut value={20} />);
 
-      const note = screen.getByRole('note');
       act(() => {
-        note.click();
+        document.body.click();
       });
-
-      const button = screen.getByRole('button');
-      expect(button).toHaveTextContent(/^120$/);
+      expect(screen.getByTestId('model')).toHaveTextContent(/^120$/);
     });
   });
 });

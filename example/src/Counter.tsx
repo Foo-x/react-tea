@@ -11,7 +11,6 @@ type Msg =
   | 'delay-multiply';
 
 type Props = {
-  label: string;
   defaultValue: number;
 };
 
@@ -61,12 +60,11 @@ export const subscriptions: Sub<Model, Msg, Props> = Sub.of(({ dispatch }) => [
 export const view = ({
   model,
   dispatch,
-  label,
   defaultValue,
 }: WithViewProps<Model, Msg, Props>) => {
   return (
     <div style={{ margin: '5rem auto', maxWidth: '400px' }}>
-      <h2>{label}</h2>
+      <h2>Counter</h2>
       <h3>default: {defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button

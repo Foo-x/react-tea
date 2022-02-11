@@ -1,37 +1,50 @@
 import { useCallback, useEffect, useReducer } from 'react';
 
-type Model = number;
+type Model = { value: number; inputValue: number };
 
 type Msg =
-  | 'increment'
-  | 'increment-with-default-value'
-  | 'decrement'
-  | 'multiply';
+  | { type: 'increment' }
+  | { type: 'increment-with-default-value' }
+  | { type: 'increment-with-input-value' }
+  | { type: 'decrement' }
+  | { type: 'multiply' }
+  | { type: 'update-input-value'; value: number };
 
 type Props = {
   defaultValue: number;
 };
 
-export const init = (defaultValue: number) => defaultValue;
+export const init = (defaultValue: number): Model => ({
+  value: defaultValue,
+  inputValue: 0,
+});
 
-export const reducer = (props: Props) => (model: Model, msg: Msg) => {
-  switch (msg) {
-    case 'increment':
-      return model + 1;
+export const reducer =
+  (props: Props) =>
+  (model: Model, msg: Msg): Model => {
+    switch (msg.type) {
+      case 'increment':
+        return { ...model, value: model.value + 1 };
 
-    case 'increment-with-default-value':
-      return model + props.defaultValue;
+      case 'increment-with-default-value':
+        return { ...model, value: model.value + props.defaultValue };
 
-    case 'decrement':
-      return model - 1;
+      case 'increment-with-input-value':
+        return { ...model, value: model.value + model.inputValue };
 
-    case 'multiply':
-      return model * 2;
+      case 'decrement':
+        return { ...model, value: model.value - 1 };
 
-    default:
-      return msg;
-  }
-};
+      case 'multiply':
+        return { ...model, value: model.value * 2 };
+
+      case 'update-input-value':
+        return { ...model, inputValue: msg.value };
+
+      default:
+        return msg;
+    }
+  };
 
 const CounterWithoutTea = ({ defaultValue }: Props) => {
   const reducerWithProps = useCallback(
@@ -43,18 +56,18 @@ const CounterWithoutTea = ({ defaultValue }: Props) => {
   // you must create async dispatch since useReducer cannot handle async action
   const delayIncrement = useCallback(() => {
     setTimeout(() => {
-      dispatch('increment');
+      dispatch({ type: 'increment' });
     }, 1000);
   }, []);
   const delayMultiply = useCallback(() => {
     setTimeout(() => {
-      dispatch('multiply');
+      dispatch({ type: 'multiply' });
     }, 1000);
   }, []);
 
   useEffect(() => {
     const listener = () => {
-      dispatch('increment');
+      dispatch({ type: 'increment' });
     };
     document.addEventListener('click', listener);
     return () => {
@@ -63,25 +76,25 @@ const CounterWithoutTea = ({ defaultValue }: Props) => {
   }, []);
 
   return (
-    <div style={{ margin: '5rem auto', maxWidth: '400px' }}>
-      <h2>Counter</h2>
+    <div>
+      <h2>Counter without TEA</h2>
       <h3>default: {defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type='button'
           onClick={(e) => {
             e.stopPropagation();
-            dispatch('decrement');
+            dispatch({ type: 'decrement' });
           }}
         >
           -
         </button>
-        {model}
+        {model.value}
         <button
           type='button'
           onClick={(e) => {
             e.stopPropagation();
-            dispatch('increment');
+            dispatch({ type: 'increment' });
           }}
         >
           +
@@ -90,7 +103,7 @@ const CounterWithoutTea = ({ defaultValue }: Props) => {
           type='button'
           onClick={(e) => {
             e.stopPropagation();
-            dispatch('increment-with-default-value');
+            dispatch({ type: 'increment-with-default-value' });
           }}
         >
           + default
@@ -99,7 +112,7 @@ const CounterWithoutTea = ({ defaultValue }: Props) => {
           type='button'
           onClick={(e) => {
             e.stopPropagation();
-            dispatch('multiply');
+            dispatch({ type: 'multiply' });
           }}
         >
           *2
@@ -121,6 +134,30 @@ const CounterWithoutTea = ({ defaultValue }: Props) => {
           }}
         >
           delay *2
+        </button>
+      </div>
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        <input
+          type={'number'}
+          defaultValue={model.inputValue}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          onChange={(e) => {
+            dispatch({
+              type: 'update-input-value',
+              value: Number(e.currentTarget.value),
+            });
+          }}
+        />
+        <button
+          type='button'
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch({ type: 'increment-with-input-value' });
+          }}
+        >
+          +
         </button>
       </div>
       <p>Increment on global click.</p>

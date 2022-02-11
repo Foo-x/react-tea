@@ -4,8 +4,11 @@ import type { NoProps, Sub } from './Sub';
 import type { UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
 
+export type InitProps<Props = NoProps> = {
+  props: Props;
+};
 export type Init<Model, Msg, Props = NoProps> = (
-  props: Props
+  initProps: InitProps<Props>
 ) => [Model, Cmd<Msg>];
 
 export type UpdateProps<Model, Msg, Props = NoProps> = UseTeaUpdateProps<
@@ -41,7 +44,7 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
   subscriptions: subscriptionsWithoutProps,
 }: TeaProps<Model, Msg, Props>) => {
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
-    const init = () => initWithoutProps(propsWithoutViewProps);
+    const init = () => initWithoutProps({ props: propsWithoutViewProps });
     const update = useCallback(
       ({ model, msg }: UseTeaUpdateProps<Model, Msg>) =>
         updateWithoutProps({ model, msg, props: propsWithoutViewProps }),

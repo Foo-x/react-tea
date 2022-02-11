@@ -22,7 +22,10 @@ type Props = {
   value: number;
 };
 
-const init: Init<Model, Msg, Props> = (props) => [props.value * 10, Cmd.none()];
+const init: Init<Model, Msg, Props> = ({ props }) => [
+  props.value * 10,
+  Cmd.none(),
+];
 
 const update: Update<Model, Msg, Props> = ({ model, msg, props }) => {
   switch (msg.type) {

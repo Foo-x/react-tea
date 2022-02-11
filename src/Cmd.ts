@@ -1,15 +1,17 @@
 import type { Dispatch } from 'react';
 
+export const cmdNoneSymbol = Symbol('Cmd.none');
+
 export type Action<Msg> = (dispatch: Dispatch<Msg>) => void;
 export type PromiseAction<Msg> = (dispatch: Dispatch<Msg>) => Promise<void>;
 export type Cmd<Msg> =
   | Action<Msg>
   | PromiseAction<Msg>
   | Array<Action<Msg> | PromiseAction<Msg>>
-  | null;
+  | typeof cmdNoneSymbol;
 
-const none = () => {
-  return null;
+const none = (): typeof cmdNoneSymbol => {
+  return cmdNoneSymbol;
 };
 
 const delay = <Msg>(action: Action<Msg>, timeout: number): Action<Msg> => {

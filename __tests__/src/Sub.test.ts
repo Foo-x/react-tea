@@ -1,9 +1,9 @@
-import { Sub } from '@/Sub';
+import { Sub, subNoneSymbol } from '@/Sub';
 import { renderHook } from '@testing-library/react-hooks';
 
 describe('Sub', () => {
-  test('none returns null', () => {
-    expect(Sub.none()).toBeNull();
+  test('none returns unique symbol', () => {
+    expect(Sub.none()).toBe(subNoneSymbol);
   });
 
   describe('of', () => {

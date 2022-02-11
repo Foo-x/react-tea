@@ -5,6 +5,8 @@ export type NoProps = {
   readonly _NoPropsBrand: unique symbol;
 };
 
+export const subNoneSymbol = Symbol('Sub.none');
+
 export type Effect<Model, Msg> = (
   model: Model,
   dispatch: Dispatch<Msg>
@@ -16,7 +18,7 @@ export type EffectWithProps<Model, Msg, Props = NoProps> = Props extends NoProps
 export type Sub<Model, Msg, Props = NoProps> =
   | EffectWithProps<Model, Msg, Props>
   | EffectWithProps<Model, Msg, Props>[]
-  | null;
+  | typeof subNoneSymbol;
 
 export type EffectorProps<Model, Msg, Props = NoProps> = Props extends NoProps
   ? {
@@ -32,8 +34,8 @@ export type Effector<Model, Msg, Props = NoProps> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
 
-const none = () => {
-  return null;
+const none = (): typeof subNoneSymbol => {
+  return subNoneSymbol;
 };
 
 const of = <Model, Msg, Props = NoProps>(

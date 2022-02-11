@@ -34,7 +34,7 @@ export const useTea = <Model, Msg>({
   const [[model, cmd], dispatch] = useReducer(reducer, undefined, init);
 
   useEffect(() => {
-    if (cmd == null) {
+    if (typeof cmd === 'symbol') {
       return;
     }
     if (!Array.isArray(cmd)) {

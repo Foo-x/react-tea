@@ -51,7 +51,7 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
       [propsWithoutViewProps]
     );
     const subscriptions = (() => {
-      if (subscriptionsWithoutProps == null) {
+      if (typeof subscriptionsWithoutProps === 'symbol') {
         return [];
       }
       if (Array.isArray(subscriptionsWithoutProps)) {

@@ -1,4 +1,4 @@
-import { Cmd } from '@/Cmd';
+import { Cmd, cmdNoneSymbol } from '@/Cmd';
 
 type Msg = 'msg' | 'msg2';
 
@@ -11,8 +11,8 @@ afterAll(() => {
 });
 
 describe('Cmd', () => {
-  test('none returns null', () => {
-    expect(Cmd.none()).toBeNull();
+  test('none returns unique symbol', () => {
+    expect(Cmd.none()).toBe(cmdNoneSymbol);
   });
 
   test('delay returns function that runs setTimeout', () => {

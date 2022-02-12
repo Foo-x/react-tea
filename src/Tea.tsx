@@ -1,5 +1,6 @@
-import { Dispatch, useCallback } from 'react';
+import { useCallback } from 'react';
 import type { Cmd } from './Cmd';
+import type { Dispatcher, WithProps } from './commonTypes';
 import type { EffectorProps, Sub } from './Sub';
 import type { UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
@@ -11,20 +12,15 @@ export type Init<Model, Msg, Props = never> = (
   initProps: InitProps<Props>
 ) => [Model, Cmd<Msg>];
 
-export type UpdateProps<Model, Msg, Props = never> = UseTeaUpdateProps<
-  Model,
-  Msg
-> & {
-  props: Props;
-};
+export type UpdateProps<Model, Msg, Props = never> = WithProps<
+  UseTeaUpdateProps<Model, Msg>,
+  Props
+>;
 export type Update<Model, Msg, Props = never> = (
   updateProps: UpdateProps<Model, Msg, Props>
 ) => [Model, Cmd<Msg>];
 
-export type ViewProps<Model, Msg> = {
-  model: Model;
-  dispatch: Dispatch<Msg>;
-};
+export type ViewProps<Model, Msg> = Dispatcher<Model, Msg>;
 
 export type WithViewProps<Model, Msg, Props = never> = ViewProps<Model, Msg> &
   Props;
@@ -47,7 +43,11 @@ export const Tea = <Model, Msg, Props extends ViewProps<Model, Msg>>({
     const init = () => initWithoutProps({ props: propsWithoutViewProps });
     const update = useCallback(
       ({ model, msg }: UseTeaUpdateProps<Model, Msg>) =>
-        updateWithoutProps({ model, msg, props: propsWithoutViewProps }),
+        updateWithoutProps({
+          model,
+          msg,
+          props: propsWithoutViewProps,
+        } as UpdateProps<Model, Msg, WithoutViewProps<Props>>),
       [propsWithoutViewProps]
     );
     const subscriptions = (() => {

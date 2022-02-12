@@ -1,19 +1,11 @@
-import type { Dispatch, EffectCallback } from 'react';
+import type { EffectCallback } from 'react';
 import { useEffect } from 'react';
+import type { Dispatcher, WithProps } from './commonTypes';
 
 export const subNoneSymbol = Symbol('Sub.none');
 
-export type WithProps<T, Props> = [Props] extends [
-  never | undefined | null | Record<string, never>
-]
-  ? T
-  : T & { props: Props };
-
 export type EffectorProps<Model, Msg, Props = never> = WithProps<
-  {
-    model: Model;
-    dispatch: Dispatch<Msg>;
-  },
+  Dispatcher<Model, Msg>,
   Props
 >;
 export type Effector<Model, Msg, Props = never> = (

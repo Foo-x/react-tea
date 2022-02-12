@@ -13,7 +13,7 @@ export type UseTeaUpdate<Model, Msg> = (
   useTeaUpdateProps: UseTeaUpdateProps<Model, Msg>
 ) => [Model, Cmd<Msg>];
 
-type UseTeaProps<Model, Msg> = {
+export type UseTeaProps<Model, Msg> = {
   init: UseTeaInit<Model, Msg>;
   update: UseTeaUpdate<Model, Msg>;
   subscriptions: Effect<Model, Msg>[];

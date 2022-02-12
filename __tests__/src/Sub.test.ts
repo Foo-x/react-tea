@@ -35,7 +35,7 @@ describe('Sub', () => {
       ]);
 
       const { rerender } = renderHook(() =>
-        sub({ model: null, dispatch: () => null, props: null })
+        sub({ model: null, dispatch: () => null })
       );
       expect(spy).toHaveBeenCalledTimes(1);
 

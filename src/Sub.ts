@@ -3,16 +3,19 @@ import { useEffect } from 'react';
 
 export const subNoneSymbol = Symbol('Sub.none');
 
-export type EffectorProps<Model, Msg, Props = never> = [Props] extends [never]
-  ? {
-      model: Model;
-      dispatch: Dispatch<Msg>;
-    }
-  : {
-      model: Model;
-      dispatch: Dispatch<Msg>;
-      props: Props;
-    };
+export type WithProps<T, Props> = [Props] extends [
+  never | undefined | null | Record<string, never>
+]
+  ? T
+  : T & { props: Props };
+
+export type EffectorProps<Model, Msg, Props = never> = WithProps<
+  {
+    model: Model;
+    dispatch: Dispatch<Msg>;
+  },
+  Props
+>;
 export type Effector<Model, Msg, Props = never> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];

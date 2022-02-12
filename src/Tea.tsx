@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { Cmd } from './Cmd';
 import type {
   Dispatcher,
@@ -118,22 +117,19 @@ export const Tea = <
 }: TeaProps<Model, Msg, HooksResult, Props>) => {
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
     const init = () => initWithoutProps({ props: propsWithoutViewProps });
-    const update = useCallback(
-      ({
+    const update = ({
+      model,
+      msg,
+      hooksResult,
+    }: UseTeaUpdateProps<Model, Msg> & {
+      hooksResult?: HooksResult;
+    }) =>
+      updateWithoutProps({
         model,
         msg,
         hooksResult,
-      }: UseTeaUpdateProps<Model, Msg> & {
-        hooksResult?: HooksResult;
-      }) =>
-        updateWithoutProps({
-          model,
-          msg,
-          hooksResult,
-          props: propsWithoutViewProps,
-        } as UpdateProps<Model, Msg, HooksResult, WithoutViewProps<Props>>),
-      [propsWithoutViewProps]
-    );
+        props: propsWithoutViewProps,
+      } as UpdateProps<Model, Msg, HooksResult, WithoutViewProps<Props>>);
     const subscriptions = (() => {
       if (typeof subscriptionsWithoutProps === 'symbol') {
         return [];

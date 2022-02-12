@@ -1,5 +1,5 @@
 import type { Dispatch } from 'react';
-import { useCallback, useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import type { Cmd } from './Cmd';
 import type { NullObject, WithHooksResult } from './commonTypes';
 import type { Effect, EffectorProps } from './Sub';
@@ -48,16 +48,13 @@ export const useTea = <Model, Msg, HooksResult = never>({
 > => {
   const hooksResult = useHooks?.();
 
-  const reducer = useCallback(
-    ([model]: [Model, Cmd<Msg>], msg: Msg): [Model, Cmd<Msg>] => {
-      return update({ model, msg, hooksResult } as UseTeaUpdateProps<
-        Model,
-        Msg,
-        HooksResult
-      >);
-    },
-    [update, hooksResult]
-  );
+  const reducer = ([model]: [Model, Cmd<Msg>], msg: Msg): [Model, Cmd<Msg>] => {
+    return update({ model, msg, hooksResult } as UseTeaUpdateProps<
+      Model,
+      Msg,
+      HooksResult
+    >);
+  };
 
   const [[model, cmd], dispatch] = useReducer(reducer, undefined, init);
 

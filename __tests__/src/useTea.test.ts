@@ -1,6 +1,7 @@
 import { Cmd } from '@/Cmd';
 import { Effect, Sub } from '@/Sub';
 import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
+import { exhaustiveCheck } from '@/utils';
 import { act, renderHook } from '@testing-library/react-hooks';
 
 type Model = { value: number; version: number };
@@ -43,7 +44,7 @@ const update: UseTeaUpdate<Model, Msg> = ({ model, msg }) => {
       return [{ value: model.value + 1, version: model.version }, Cmd.none()];
 
     default:
-      return msg;
+      return exhaustiveCheck(msg);
   }
 };
 

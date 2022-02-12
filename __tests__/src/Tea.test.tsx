@@ -1,6 +1,7 @@
 import { Cmd } from '@/Cmd';
 import { Sub } from '@/Sub';
 import { Init, Tea, Update, WithViewProps } from '@/Tea';
+import { exhaustiveCheck } from '@/utils';
 import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
@@ -39,7 +40,7 @@ const update: Update<Model, Msg, Props> = ({ model, msg, props }) => {
       return [model + msg.value, Cmd.none()];
 
     default:
-      return msg;
+      return exhaustiveCheck(msg);
   }
 };
 

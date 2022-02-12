@@ -1,21 +1,22 @@
 import type { EffectCallback } from 'react';
 import { useEffect } from 'react';
-import type { Dispatcher, WithProps } from './commonTypes';
+import type { Dispatcher, NullableProps, WithProps } from './commonTypes';
 
 export const subNoneSymbol = Symbol('Sub.none');
 
-export type EffectorProps<Model, Msg, Props = never> = WithProps<
-  Dispatcher<Model, Msg>,
-  Props
->;
-export type Effector<Model, Msg, Props = never> = (
+export type EffectorProps<
+  Model,
+  Msg,
+  Props extends NullableProps = never
+> = WithProps<Dispatcher<Model, Msg>, Props>;
+export type Effector<Model, Msg, Props extends NullableProps = never> = (
   effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
-export type Effect<Model, Msg, Props = never> = (
+export type Effect<Model, Msg, Props extends NullableProps = never> = (
   effectProps: EffectorProps<Model, Msg, Props>
 ) => void;
 
-export type Sub<Model, Msg, Props = never> =
+export type Sub<Model, Msg, Props extends NullableProps = never> =
   | Effect<Model, Msg, Props>
   | Effect<Model, Msg, Props>[]
   | typeof subNoneSymbol;
@@ -24,7 +25,7 @@ const none = (): typeof subNoneSymbol => {
   return subNoneSymbol;
 };
 
-const of = <Model, Msg, Props = never>(
+const of = <Model, Msg, Props extends NullableProps = never>(
   effector: Effector<Model, Msg, Props>
 ): Effect<Model, Msg, Props> => {
   const useSub = ({
@@ -43,7 +44,7 @@ const of = <Model, Msg, Props = never>(
   return useSub as Effect<Model, Msg, Props>;
 };
 
-const batch = <Model, Msg, Props = never>(
+const batch = <Model, Msg, Props extends NullableProps = never>(
   ...subs: Effect<Model, Msg, Props>[]
 ): Effect<Model, Msg, Props>[] => {
   return subs;

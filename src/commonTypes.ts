@@ -7,16 +7,28 @@ export type NullableProps = Nullable<Record<string, unknown>>;
 
 export type NullObject = Record<string, never> | None | never;
 
-export type MergeIfExists<T, R, K extends string> = [R] extends [NullObject]
+export type MergeIfExists<
+  ToCheck,
+  T extends Record<string, unknown>,
+  MergedKey extends string,
+  MergedValue
+> = [ToCheck] extends [NullObject] ? T : T & { [k in MergedKey]: MergedValue };
+export type AppendIfExists<ToCheck, T extends unknown[], Appended> = [
+  ToCheck
+] extends [NullObject]
   ? T
-  : T & { [k in K]: R };
+  : [...T, Appended];
 
-export type WithProps<T, Props> = MergeIfExists<T, Props, 'props'>;
-export type WithHooksResult<T, HooksResult> = MergeIfExists<
+export type WithProps<T extends Record<string, unknown>, Props> = MergeIfExists<
+  Props,
   T,
-  HooksResult,
-  'hooksResult'
+  'props',
+  Props
 >;
+export type WithHooksResult<
+  T extends Record<string, unknown>,
+  HooksResult
+> = MergeIfExists<HooksResult, T, 'hooksResult', HooksResult>;
 
 export type Dispatcher<Model, Msg> = {
   model: Model;

@@ -1,16 +1,18 @@
 import type { Cmd } from './Cmd';
 import type {
   Dispatcher,
+  MergeIfExists,
   NullableProps,
+  NullObject,
   WithHooksResult,
   WithProps,
 } from './commonTypes';
 import type { Effect, EffectorProps, Sub } from './Sub';
-import type { UseTeaUpdateProps } from './useTea';
+import type { UseTeaProps, UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
 
 export type InitProps<Props extends NullableProps = never> = WithProps<
-  unknown,
+  Record<string, unknown>,
   Props
 >;
 export type Init<Model, Msg, Props extends NullableProps = never> = (
@@ -33,7 +35,7 @@ export type Update<
 ) => [Model, Cmd<Msg>];
 
 export type UseHooksProps<Props extends NullableProps = never> = WithProps<
-  unknown,
+  Record<string, unknown>,
   Props
 >;
 export type UseHooks<HooksResult, Props extends NullableProps = never> = (
@@ -44,14 +46,15 @@ export type ViewProps<Model, Msg, HooksResult = never> = WithHooksResult<
   Dispatcher<Model, Msg>,
   HooksResult
 >;
-
 export type WithViewProps<
   Model,
   Msg,
   HooksResult = never,
   Props extends NullableProps = never
-> = ViewProps<Model, Msg, HooksResult> & Props;
-export type WithoutViewProps<Props> = Omit<
+> = [Props] extends [NullObject]
+  ? ViewProps<Model, Msg, HooksResult>
+  : ViewProps<Model, Msg, HooksResult> & Props;
+export type WithoutViewProps<Props extends NullableProps> = Omit<
   Props,
   'model' | 'dispatch' | 'hooksResult'
 >;
@@ -91,13 +94,19 @@ export type TeaProps<
     Msg,
     HooksResult
   >
-> = {
-  init: Init<Model, Msg, WithoutViewProps<Props>>;
-  update: Update<Model, Msg, HooksResult, WithoutViewProps<Props>>;
-  subscriptions: Sub<Model, Msg, HooksResult, WithoutViewProps<Props>>;
-  useHooks?: UseHooks<HooksResult, WithoutViewProps<Props>>;
-  view: React.VFC<Props>;
-};
+> = MergeIfExists<
+  HooksResult,
+  {
+    init: Init<Model, Msg, WithoutViewProps<Props>> | Init<Model, Msg>;
+    update:
+      | Update<Model, Msg, HooksResult, WithoutViewProps<Props>>
+      | Update<Model, Msg, HooksResult>;
+    subscriptions: Sub<Model, Msg, HooksResult, WithoutViewProps<Props>>;
+    view: React.VFC<Props>;
+  },
+  'useHooks',
+  UseHooks<HooksResult, WithoutViewProps<Props>>
+>;
 
 export const Tea = <
   Model,
@@ -108,13 +117,15 @@ export const Tea = <
     Msg,
     HooksResult
   >
->({
-  init: initWithoutProps,
-  update: updateWithoutProps,
-  subscriptions: subscriptionsWithoutProps,
-  useHooks: useHooksWithoutProps,
-  view,
-}: TeaProps<Model, Msg, HooksResult, Props>) => {
+>(
+  teaProps: TeaProps<Model, Msg, HooksResult, Props>
+) => {
+  const {
+    init: initWithoutProps,
+    update: updateWithoutProps,
+    subscriptions: subscriptionsWithoutProps,
+    view,
+  } = teaProps;
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
     const init = () => initWithoutProps({ props: propsWithoutViewProps });
     const update = ({
@@ -138,20 +149,26 @@ export const Tea = <
         .flat()
         .map(applyPropsToSub(propsWithoutViewProps));
     })();
-    const useHooks = (() => {
-      if (useHooksWithoutProps == null) {
-        return undefined;
+    const useTeaActual = (() => {
+      if ('useHooks' in teaProps) {
+        const useTeaWithHooks = () =>
+          useTea({
+            init,
+            update,
+            subscriptions,
+            useHooks: () => teaProps.useHooks({ props: propsWithoutViewProps }),
+          } as UseTeaProps<Model, Msg, HooksResult>);
+        return useTeaWithHooks;
       }
-      const useHooksActual = () =>
-        useHooksWithoutProps({ props: propsWithoutViewProps });
-      return useHooksActual;
+      const useTeaWithoutHooks = () =>
+        useTea({
+          init,
+          update,
+          subscriptions,
+        } as UseTeaProps<Model, Msg, HooksResult>);
+      return useTeaWithoutHooks;
     })();
-    const [model, dispatch, hooksResult] = useTea({
-      init,
-      update,
-      subscriptions,
-      useHooks,
-    });
+    const [model, dispatch, hooksResult] = useTeaActual();
 
     const props = {
       ...propsWithoutViewProps,

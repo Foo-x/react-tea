@@ -7,6 +7,8 @@ export {
   TeaProps,
   Update,
   UpdateProps,
+  UseHooks,
+  UseHooksProps,
   ViewProps,
   WithoutViewProps,
   WithViewProps,

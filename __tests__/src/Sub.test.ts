@@ -7,40 +7,56 @@ describe('Sub', () => {
   });
 
   describe('of', () => {
-    it('returns array with custom hook that register effect', () => {
+    it('returns custom hook that register effect', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<null, null>(() => [
+      const sub = Sub.of<number, null>(({ model }) => [
         () => {
-          spy();
+          spy(model);
         },
       ]);
 
-      const { rerender } = renderHook(() =>
-        sub({ model: null, dispatch: () => null })
-      );
-      expect(spy).toHaveBeenCalledTimes(1);
+      const expected = Math.random();
 
-      rerender();
-      expect(spy).toHaveBeenCalledTimes(2);
+      renderHook(() => sub({ model: expected, dispatch: () => null }));
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toBeCalledWith(expected);
     });
 
-    it('returns array with custom hook that register effect with props', () => {
+    it('returns custom hook that register effect with hooksResult', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<null, null, null>(() => [
+      const sub = Sub.of<null, null, number>(({ hooksResult }) => [
         () => {
-          spy();
+          spy(hooksResult);
         },
       ]);
 
-      const { rerender } = renderHook(() =>
-        sub({ model: null, dispatch: () => null })
+      const expected = Math.random();
+
+      renderHook(() =>
+        sub({ model: null, dispatch: () => null, hooksResult: expected })
       );
       expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toBeCalledWith(expected);
+    });
 
-      rerender();
-      expect(spy).toHaveBeenCalledTimes(2);
+    it('returns custom hook that register effect with props', () => {
+      const spy = jest.fn();
+
+      const sub = Sub.of<null, null, null, { value: number }>(({ props }) => [
+        () => {
+          spy(props.value);
+        },
+      ]);
+
+      const expected = Math.random();
+
+      renderHook(() =>
+        sub({ model: null, dispatch: () => null, props: { value: expected } })
+      );
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toBeCalledWith(expected);
     });
 
     it('re-register effect on deps update', () => {

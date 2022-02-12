@@ -5,11 +5,16 @@ export type Nullable<T> = T | None;
 
 export type NullableProps = Nullable<Record<string, unknown>>;
 
-export type WithProps<T, Props> = [Props] extends [
+export type NullObject = Record<string, never> | None | never;
+
+export type WithProps<T, Props> = [Props] extends [NullObject]
+  ? T
+  : T & { props: Props };
+export type WithHooksResult<T, HooksResult> = [HooksResult] extends [
   Record<string, never> | None | never
 ]
   ? T
-  : T & { props: Props };
+  : T & { hooksResult: HooksResult };
 
 export type Dispatcher<Model, Msg> = {
   model: Model;

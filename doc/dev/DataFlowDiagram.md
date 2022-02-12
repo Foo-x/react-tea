@@ -15,8 +15,8 @@ graph TD
     p -- only on first render --> i
     p --> v & s & u & h
     i --> m
-    m --> v & s & h
-    h --> H --> v & s
+    m --> v & s & u
+    h --> H --> v & s & u
     v & s --> msg
     msg --> u
     u --> msg & m

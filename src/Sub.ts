@@ -73,6 +73,28 @@ const of = <
   return useSub as Effect<Model, Msg, Props, HooksResult>;
 };
 
+const onMount = <
+  Model,
+  Msg,
+  Props extends NullableProps = never,
+  HooksResult = never
+>(
+  callback: (props: EffectorProps<Model, Msg, Props, HooksResult>) => void
+): Effect<Model, Msg, Props, HooksResult> => {
+  return of((props) => [() => callback(props), []]);
+};
+
+const onUnmount = <
+  Model,
+  Msg,
+  Props extends NullableProps = never,
+  HooksResult = never
+>(
+  callback: (props: EffectorProps<Model, Msg, Props, HooksResult>) => void
+): Effect<Model, Msg, Props, HooksResult> => {
+  return of((props) => [() => () => callback(props), []]);
+};
+
 const batch = <
   Model,
   Msg,
@@ -85,4 +107,4 @@ const batch = <
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Sub = { none, of, batch };
+export const Sub = { none, of, batch, onMount, onUnmount };

@@ -108,6 +108,46 @@ describe('Sub', () => {
     });
   });
 
+  test('onMount returns custom hook that register effect which runs only on mount', () => {
+    const spy = jest.fn();
+
+    const sub = Sub.onMount<number, null>(({ model }) => {
+      spy(model);
+    });
+
+    const expected = Math.random();
+
+    const { rerender } = renderHook(() =>
+      sub({ model: expected, dispatch: () => null })
+    );
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toBeCalledWith(expected);
+
+    rerender();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  test('onUnmount returns custom hook that register effect which runs only on unmount', () => {
+    const spy = jest.fn();
+
+    const sub = Sub.onUnmount<number, null>(({ model }) => {
+      spy(model);
+    });
+
+    const expected = Math.random();
+
+    const { unmount } = renderHook(() =>
+      sub({ model: expected, dispatch: () => null })
+    );
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    unmount();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toBeCalledWith(expected);
+  });
+
   test('batch returns array of custom hooks that register effects', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();

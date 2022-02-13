@@ -17,7 +17,7 @@ There is also the problem that useReducer cannot handle asynchronous code.
 
 The advantages of TEA are that:
 
-- view and logic are separated, so it is easy to test.
+- view and logic are separated, so they are easy to test.
 - update can handle asynchronous code.
 
 

@@ -14,4 +14,4 @@ export {
   WithoutViewProps,
   WithViewProps,
 } from './Tea';
-export { exhaustiveCheck } from './utils';
+export { exhaustiveCheck, memo, memoCallback } from './utils';

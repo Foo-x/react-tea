@@ -43,6 +43,9 @@ rules:
   import/prefer-default-export: off
   arrow-body-style: off
   '@typescript-eslint/no-misused-promises': off
+  '@typescript-eslint/no-explicit-any':
+    - warn
+    - ignoreRestArgs: true
 settings:
   import/resolver:
     typescript: {}

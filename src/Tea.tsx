@@ -10,6 +10,7 @@ import type {
 import type { Effect, EffectorProps, Sub } from './Sub';
 import type { UseTeaProps, UseTeaUpdateProps } from './useTea';
 import { useTea } from './useTea';
+import { hook } from './utils';
 
 export type InitProps<Props extends NullableProps = never> = WithProps<
   Record<string, unknown>,
@@ -147,29 +148,25 @@ export const Tea = <
         .flat()
         .map(applyPropsToSub(propsWithoutViewProps));
     })();
-    const useTeaActual = (() => {
+    const useTeaResult = (() => {
       if ('useHooks' in teaProps) {
-        const useTeaWithHooks = () =>
-          useTea({
-            init,
-            update,
-            subscriptions,
-            useHooks: () => teaProps.useHooks({ props: propsWithoutViewProps }),
-          } as UseTeaProps<Model, Msg, HooksResult>);
-        return useTeaWithHooks;
-      }
-      const useTeaWithoutHooks = () =>
-        useTea({
+        return hook(useTea, {
           init,
           update,
           subscriptions,
+          useHooks: () => teaProps.useHooks({ props: propsWithoutViewProps }),
         } as UseTeaProps<Model, Msg, HooksResult>);
-      return useTeaWithoutHooks;
+      }
+      return hook(useTea, {
+        init,
+        update,
+        subscriptions,
+      } as UseTeaProps<Model, Msg, HooksResult>);
     })();
 
     const props = {
       ...propsWithoutViewProps,
-      ...useTeaActual(),
+      ...useTeaResult,
     } as WithHooksResult<Props, HooksResult>;
     return view({ ...props });
   };

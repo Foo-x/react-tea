@@ -1,6 +1,6 @@
 import { Cmd } from '@/Cmd';
 import { Sub } from '@/Sub';
-import { Init, Tea, Update, UseHooks, WithViewProps } from '@/Tea';
+import { Init, Tea, Update, UseHooks, View } from '@/Tea';
 import { exhaustiveCheck } from '@/utils';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { useMemo } from 'react';
@@ -94,12 +94,12 @@ describe('Tea', () => {
       };
     };
 
-    const view = ({
+    const view: View<Model, Msg, HooksResult, Props> = ({
       model,
       dispatch,
       value,
       hooksResult,
-    }: WithViewProps<Model, Msg, HooksResult, Props>) => {
+    }) => {
       return (
         <div>
           <button
@@ -248,7 +248,7 @@ describe('Tea', () => {
 
     const subscriptions: Sub<Model, Msg> = Sub.none();
 
-    const view = ({ model }: WithViewProps<Model, Msg>) => {
+    const view: View<Model, Msg> = ({ model }) => {
       return (
         <div>
           <div data-testid='model'>{model}</div>

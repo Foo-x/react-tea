@@ -58,6 +58,12 @@ export type WithoutViewProps<Props extends NullableProps> = Omit<
   Props,
   'model' | 'dispatch' | 'hooksResult'
 >;
+export type View<
+  Model,
+  Msg,
+  HooksResult = never,
+  Props extends NullableProps = never
+> = React.VFC<WithViewProps<Model, Msg, HooksResult, Props>>;
 
 const applyPropsToSub = <
   Model,

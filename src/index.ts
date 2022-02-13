@@ -9,6 +9,7 @@ export {
   UpdateProps,
   UseHooks,
   UseHooksProps,
+  View,
   ViewProps,
   WithoutViewProps,
   WithViewProps,

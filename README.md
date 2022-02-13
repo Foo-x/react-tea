@@ -35,7 +35,10 @@ See [API.md](./doc/API.md).
 
 ## Example
 
-See [Counter.tsx](./example/src/Counter.tsx).
+See:
+
+-  [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
+-  [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
 
 
 ## License

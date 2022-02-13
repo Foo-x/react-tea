@@ -1,11 +1,7 @@
 import type { Dispatch } from 'react';
 import { useEffect, useReducer } from 'react';
 import type { Cmd } from './Cmd';
-import type {
-  AppendIfExists,
-  MergeIfExists,
-  WithHooksResult,
-} from './commonTypes';
+import type { MergeIfExists, WithHooksResult } from './commonTypes';
 import type { Effect, EffectorProps } from './Sub';
 
 export type UseTeaInit<Model, Msg> = () => [Model, Cmd<Msg>];
@@ -38,9 +34,10 @@ export type UseTeaProps<Model, Msg, HooksResult = never> = MergeIfExists<
   UseTeaUseHooks<HooksResult>
 >;
 
-export type UseTeaResult<Model, Msg, HooksResult = never> = AppendIfExists<
+export type UseTeaResult<Model, Msg, HooksResult = never> = MergeIfExists<
   HooksResult,
-  [Model, Dispatch<Msg>],
+  { model: Model; dispatch: Dispatch<Msg> },
+  'hooksResult',
   HooksResult
 >;
 
@@ -81,11 +78,11 @@ export const useTea = <Model, Msg, HooksResult = never>(
   );
 
   if (hooksResult) {
-    return [model, dispatch, hooksResult] as UseTeaResult<
+    return { model, dispatch, hooksResult } as UseTeaResult<
       Model,
       Msg,
       HooksResult
     >;
   }
-  return [model, dispatch] as UseTeaResult<Model, Msg, HooksResult>;
+  return { model, dispatch } as UseTeaResult<Model, Msg, HooksResult>;
 };

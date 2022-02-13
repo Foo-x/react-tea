@@ -86,9 +86,9 @@ describe('useTea', () => {
         useTea({ init, update, subscriptions, useHooks })
       );
 
-      expect(result.current[0].value).toBe(0);
-      expect(typeof result.current[1]).toBe('function');
-      expect(result.current[2].value).toBe(20);
+      expect(result.current.model.value).toBe(0);
+      expect(typeof result.current.dispatch).toBe('function');
+      expect(result.current.hooksResult.value).toBe(20);
     });
 
     test('rerender on dispatch', () => {
@@ -98,13 +98,13 @@ describe('useTea', () => {
         return useTea({ init, update, subscriptions, useHooks });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment');
+        result.current.dispatch('increment');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
     });
 
@@ -115,19 +115,19 @@ describe('useTea', () => {
         return useTea({ init, update, subscriptions, useHooks });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment-with-cmd');
+        result.current.dispatch('increment-with-cmd');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
         jest.runAllTimers();
       });
-      expect(result.current[0].value).toBe(2);
+      expect(result.current.model.value).toBe(2);
       expect(count).toBe(3);
     });
 
@@ -138,26 +138,26 @@ describe('useTea', () => {
         return useTea({ init, update, subscriptions, useHooks });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment-with-cmd');
+        result.current.dispatch('increment-with-cmd');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
-        result.current[1]('increment-with-cmd');
+        result.current.dispatch('increment-with-cmd');
       });
-      expect(result.current[0].value).toBe(2);
+      expect(result.current.model.value).toBe(2);
       expect(count).toBe(3);
 
       act(() => {
         jest.runAllTimers();
       });
 
-      expect(result.current[0].value).toBe(4);
+      expect(result.current.model.value).toBe(4);
       expect(count).toBe(4);
     });
 
@@ -168,21 +168,21 @@ describe('useTea', () => {
         return useTea({ init, update, subscriptions, useHooks });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment-with-batch');
+        result.current.dispatch('increment-with-batch');
       });
 
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
         jest.runAllTimers();
       });
 
-      expect(result.current[0].value).toBe(3);
+      expect(result.current.model.value).toBe(3);
       expect(count).toBe(4);
     });
 
@@ -191,13 +191,13 @@ describe('useTea', () => {
         useTea({ init, update, subscriptions, useHooks })
       );
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
 
       act(() => {
-        result.current[1]('increment-with-hooks-result');
+        result.current.dispatch('increment-with-hooks-result');
       });
 
-      expect(result.current[0].value).toBe(20);
+      expect(result.current.model.value).toBe(20);
     });
 
     test('cmd in init', () => {
@@ -213,13 +213,13 @@ describe('useTea', () => {
         })
       );
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
 
       act(() => {
         jest.runAllTimers();
       });
 
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
     });
   });
 
@@ -240,13 +240,13 @@ describe('useTea', () => {
         });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment-with-same-version');
+        result.current.dispatch('increment-with-same-version');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
     });
 
@@ -267,19 +267,19 @@ describe('useTea', () => {
         });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment');
+        result.current.dispatch('increment');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
 
       act(() => {
-        result.current[1]('increment-with-same-version');
+        result.current.dispatch('increment-with-same-version');
       });
-      expect(result.current[0].value).toBe(2);
+      expect(result.current.model.value).toBe(2);
       expect(count).toBe(2);
     });
 
@@ -300,13 +300,13 @@ describe('useTea', () => {
         });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(1);
 
       act(() => {
-        result.current[1]('increment');
+        result.current.dispatch('increment');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(1);
     });
 
@@ -328,17 +328,17 @@ describe('useTea', () => {
         });
       });
 
-      expect(result.current[0].value).toBe(0);
+      expect(result.current.model.value).toBe(0);
       expect(count).toBe(0);
 
       act(() => {
-        result.current[1]('increment-with-same-version');
+        result.current.dispatch('increment-with-same-version');
       });
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(1);
 
       unmount();
-      expect(result.current[0].value).toBe(1);
+      expect(result.current.model.value).toBe(1);
       expect(count).toBe(2);
     });
   });

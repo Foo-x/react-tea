@@ -166,13 +166,10 @@ export const Tea = <
         } as UseTeaProps<Model, Msg, HooksResult>);
       return useTeaWithoutHooks;
     })();
-    const [model, dispatch, hooksResult] = useTeaActual();
 
     const props = {
       ...propsWithoutViewProps,
-      model,
-      dispatch,
-      hooksResult,
+      ...useTeaActual(),
     } as WithHooksResult<Props, HooksResult>;
     return view({ ...props });
   };

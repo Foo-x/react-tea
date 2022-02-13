@@ -29,7 +29,7 @@ describe('Tea', () => {
     };
 
     type HooksResult = {
-      value: number;
+      hooksValue: number;
     };
 
     const init: Init<Model, Msg, Props> = ({ props }) => [
@@ -37,7 +37,7 @@ describe('Tea', () => {
       Cmd.none(),
     ];
 
-    const update: Update<Model, Msg, HooksResult, Props> = ({
+    const update: Update<Model, Msg, Props, HooksResult> = ({
       model,
       msg,
       props,
@@ -51,7 +51,7 @@ describe('Tea', () => {
           return [model + props.value * 100, Cmd.none()];
 
         case 'increment-hooks-value':
-          return [model + hooksResult.value * 1000, Cmd.none()];
+          return [model + hooksResult.hooksValue * 1000, Cmd.none()];
 
         case 'add':
           return [model + msg.value, Cmd.none()];
@@ -61,7 +61,7 @@ describe('Tea', () => {
       }
     };
 
-    const subscriptions: Sub<Model, Msg, HooksResult, Props> = Sub.batch(
+    const subscriptions: Sub<Model, Msg, Props, HooksResult> = Sub.batch(
       Sub.of(({ dispatch, props }) => [
         () => {
           const listener = () => {
@@ -77,24 +77,24 @@ describe('Tea', () => {
       Sub.of(({ dispatch, hooksResult }) => [
         () => {
           const listener = () => {
-            dispatch({ type: 'add', value: hooksResult.value });
+            dispatch({ type: 'add', value: hooksResult.hooksValue });
           };
           document.addEventListener('focus', listener);
           return () => {
             document.removeEventListener('focus', listener);
           };
         },
-        [hooksResult.value],
+        [hooksResult.hooksValue],
       ])
     );
 
     const useHooks: UseHooks<HooksResult, Props> = ({ props }) => {
       return {
-        value: useMemo(() => props.value * 2, [props.value]),
+        hooksValue: useMemo(() => props.value * 2, [props.value]),
       };
     };
 
-    const view: View<Model, Msg, HooksResult, Props> = ({
+    const view: View<Model, Msg, Props, HooksResult> = ({
       model,
       dispatch,
       value,
@@ -131,7 +131,7 @@ describe('Tea', () => {
           </button>
           <div data-testid='model'>{model}</div>
           <div data-testid='value'>{value}</div>
-          <div data-testid='hooks-result'>{hooksResult.value}</div>
+          <div data-testid='hooks-result'>{hooksResult.hooksValue}</div>
         </div>
       );
     };

@@ -12,32 +12,32 @@ export const subNoneSymbol = Symbol('Sub.none');
 export type EffectorProps<
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
+  Props extends NullableProps = never,
+  HooksResult = never
 > = WithHooksResult<WithProps<Dispatcher<Model, Msg>, Props>, HooksResult>;
 export type Effector<
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
+  Props extends NullableProps = never,
+  HooksResult = never
 > = (
-  effectorProps: EffectorProps<Model, Msg, HooksResult, Props>
+  effectorProps: EffectorProps<Model, Msg, Props, HooksResult>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
 export type Effect<
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
-> = (effectProps: EffectorProps<Model, Msg, HooksResult, Props>) => void;
+  Props extends NullableProps = never,
+  HooksResult = never
+> = (effectProps: EffectorProps<Model, Msg, Props, HooksResult>) => void;
 
 export type Sub<
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
+  Props extends NullableProps = never,
+  HooksResult = never
 > =
-  | Effect<Model, Msg, HooksResult, Props>
-  | Effect<Model, Msg, HooksResult, Props>[]
+  | Effect<Model, Msg, Props, HooksResult>
+  | Effect<Model, Msg, Props, HooksResult>[]
   | typeof subNoneSymbol;
 
 const none = (): typeof subNoneSymbol => {
@@ -47,17 +47,17 @@ const none = (): typeof subNoneSymbol => {
 const of = <
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
+  Props extends NullableProps = never,
+  HooksResult = never
 >(
-  effector: Effector<Model, Msg, HooksResult, Props>
-): Effect<Model, Msg, HooksResult, Props> => {
+  effector: Effector<Model, Msg, Props, HooksResult>
+): Effect<Model, Msg, Props, HooksResult> => {
   const useSub = ({
     model,
     dispatch,
     props,
     hooksResult,
-  }: EffectorProps<Model, Msg, HooksResult, Props> & {
+  }: EffectorProps<Model, Msg, Props, HooksResult> & {
     props: Props;
     hooksResult: HooksResult;
   }) => {
@@ -66,21 +66,21 @@ const of = <
       dispatch,
       props,
       hooksResult,
-    } as EffectorProps<Model, Msg, HooksResult, Props>);
+    } as EffectorProps<Model, Msg, Props, HooksResult>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(effect, deps);
   };
-  return useSub as Effect<Model, Msg, HooksResult, Props>;
+  return useSub as Effect<Model, Msg, Props, HooksResult>;
 };
 
 const batch = <
   Model,
   Msg,
-  HooksResult = never,
-  Props extends NullableProps = never
+  Props extends NullableProps = never,
+  HooksResult = never
 >(
-  ...subs: Effect<Model, Msg, HooksResult, Props>[]
-): Effect<Model, Msg, HooksResult, Props>[] => {
+  ...subs: Effect<Model, Msg, Props, HooksResult>[]
+): Effect<Model, Msg, Props, HooksResult>[] => {
   return subs;
 };
 

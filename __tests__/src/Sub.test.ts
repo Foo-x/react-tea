@@ -23,28 +23,10 @@ describe('Sub', () => {
       expect(spy).toBeCalledWith(expected);
     });
 
-    it('returns custom hook that register effect with hooksResult', () => {
-      const spy = jest.fn();
-
-      const sub = Sub.of<null, null, number>(({ hooksResult }) => [
-        () => {
-          spy(hooksResult);
-        },
-      ]);
-
-      const expected = Math.random();
-
-      renderHook(() =>
-        sub({ model: null, dispatch: () => null, hooksResult: expected })
-      );
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toBeCalledWith(expected);
-    });
-
     it('returns custom hook that register effect with props', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<null, null, null, { value: number }>(({ props }) => [
+      const sub = Sub.of<null, null, { value: number }>(({ props }) => [
         () => {
           spy(props.value);
         },
@@ -54,6 +36,24 @@ describe('Sub', () => {
 
       renderHook(() =>
         sub({ model: null, dispatch: () => null, props: { value: expected } })
+      );
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toBeCalledWith(expected);
+    });
+
+    it('returns custom hook that register effect with hooksResult', () => {
+      const spy = jest.fn();
+
+      const sub = Sub.of<null, null, null, number>(({ hooksResult }) => [
+        () => {
+          spy(hooksResult);
+        },
+      ]);
+
+      const expected = Math.random();
+
+      renderHook(() =>
+        sub({ model: null, dispatch: () => null, hooksResult: expected })
       );
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toBeCalledWith(expected);

@@ -32,7 +32,7 @@ export type UseTeaProps<Model, Msg, HooksResult = never> = MergeIfExists<
   {
     init: UseTeaInit<Model, Msg>;
     update: UseTeaUpdate<Model, Msg, HooksResult>;
-    subscriptions: Effect<Model, Msg, HooksResult>[];
+    subscriptions: Effect<Model, Msg, never, HooksResult>[];
   },
   'useHooks',
   UseTeaUseHooks<HooksResult>
@@ -75,6 +75,7 @@ export const useTea = <Model, Msg, HooksResult = never>(
     sub({ model, dispatch, hooksResult } as EffectorProps<
       Model,
       Msg,
+      never,
       HooksResult
     >)
   );

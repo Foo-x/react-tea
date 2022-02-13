@@ -79,18 +79,9 @@ afterAll(() => {
 
 describe('useTea', () => {
   describe('no subscription', () => {
-    const subscriptions: Effect<Model, Msg, HooksResult>[] = [];
+    const subscriptions: Effect<Model, Msg, never, HooksResult>[] = [];
 
-    test('initial model and dispatch', () => {
-      const { result } = renderHook(() =>
-        useTea({ init, update, subscriptions })
-      );
-
-      expect(result.current[0].value).toBe(0);
-      expect(typeof result.current[1]).toBe('function');
-    });
-
-    test('initial with hooksResult', () => {
+    test('initial result', () => {
       const { result } = renderHook(() =>
         useTea({ init, update, subscriptions, useHooks })
       );
@@ -104,7 +95,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions });
+        return useTea({ init, update, subscriptions, useHooks });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -121,7 +112,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions });
+        return useTea({ init, update, subscriptions, useHooks });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -144,7 +135,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions });
+        return useTea({ init, update, subscriptions, useHooks });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -174,7 +165,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions });
+        return useTea({ init, update, subscriptions, useHooks });
       });
 
       expect(result.current[0].value).toBe(0);
@@ -218,6 +209,7 @@ describe('useTea', () => {
           ],
           update,
           subscriptions,
+          useHooks,
         })
       );
 

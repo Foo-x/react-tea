@@ -81,7 +81,7 @@ export const view = ({
 }: WithViewProps<Model, Msg, Props>) => {
   return (
     <div>
-      <h2>Counter with TEA</h2>
+      <h2>Counter with effects</h2>
       <h3>default: {defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
@@ -169,6 +169,6 @@ export const view = ({
   );
 };
 
-const Counter = Tea({ init, update, subscriptions, view });
+const CounterWithEffects = Tea({ init, update, subscriptions, view });
 
-export default Counter;
+export default CounterWithEffects;

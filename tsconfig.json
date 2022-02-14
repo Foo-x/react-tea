@@ -11,6 +11,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noErrorTruncation": true,
     "skipLibCheck": true,
     "pretty": true,
     "jsx": "react-jsx",

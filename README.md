@@ -4,7 +4,6 @@ The Elm Architecture for React.
 
 [The Elm Architecture · An Introduction to Elm](https://guide.elm-lang.org/architecture/)
 
-This library introduces The Elm Architecture (TEA) to React components.  
 The differences from the original TEA are that:
 
 - it is applied to each component, not to the entire app.

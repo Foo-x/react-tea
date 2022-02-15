@@ -1,6 +1,8 @@
+import type { Dispatch } from 'react';
 import type { Cmd } from './Cmd';
 import type {
   Dispatcher,
+  MergeIfExists,
   NullableProps,
   NullObject,
   WithProps,
@@ -26,19 +28,51 @@ export type Update<Model, Msg, Props extends NullableProps = never> = (
   updateProps: UpdateProps<Model, Msg, Props>
 ) => [Model, Cmd<Msg>];
 
-export type ViewProps<Model, Msg> = Dispatcher<Model, Msg>;
-export type WithViewProps<Model, Msg, Props extends NullableProps = never> = [
+type WithHooksResult<
+  T extends Record<string, unknown>,
+  HooksResult
+> = MergeIfExists<HooksResult, T, 'hooksResult', HooksResult>;
+
+export type UseHooksProps<
+  Model,
+  Msg,
+  Props extends NullableProps = never
+> = WithProps<
+  {
+    model: Model;
+    dispatch: Dispatch<Msg>;
+  },
   Props
-] extends [NullObject]
-  ? ViewProps<Model, Msg>
-  : ViewProps<Model, Msg> & Props;
+>;
+export type UseHooks<
+  Model,
+  Msg,
+  HooksResult,
+  Props extends NullableProps = never
+> = (useHooksProps: UseHooksProps<Model, Msg, Props>) => HooksResult;
+
+export type ViewProps<Model, Msg, HooksResult = never> = WithHooksResult<
+  Dispatcher<Model, Msg>,
+  HooksResult
+>;
+export type WithViewProps<
+  Model,
+  Msg,
+  Props extends NullableProps = never,
+  HooksResult = never
+> = [Props] extends [NullObject]
+  ? ViewProps<Model, Msg, HooksResult>
+  : ViewProps<Model, Msg, HooksResult> & Props;
 export type WithoutViewProps<Props extends NullableProps> = Omit<
   Props,
-  'model' | 'dispatch'
+  'model' | 'dispatch' | 'hooksResult'
 >;
-export type View<Model, Msg, Props extends NullableProps = never> = React.VFC<
-  WithViewProps<Model, Msg, Props>
->;
+export type View<
+  Model,
+  Msg,
+  Props extends NullableProps = never,
+  HooksResult = never
+> = React.VFC<WithViewProps<Model, Msg, Props, HooksResult>>;
 
 const applyPropsToSub = <Model, Msg, Props extends NullableProps = never>(
   props: Props
@@ -55,20 +89,27 @@ const applyPropsToSub = <Model, Msg, Props extends NullableProps = never>(
 export type TeaProps<
   Model,
   Msg,
-  Props extends ViewProps<Model, Msg> = ViewProps<Model, Msg>
-> = {
-  init: Init<Model, Msg, WithoutViewProps<Props>> | Init<Model, Msg>;
-  update: Update<Model, Msg, WithoutViewProps<Props>> | Update<Model, Msg>;
-  subscriptions: Sub<Model, Msg, WithoutViewProps<Props>>;
-  view: React.VFC<Props>;
-};
+  Props extends ViewProps<Model, Msg> = ViewProps<Model, Msg>,
+  HooksResult = never
+> = MergeIfExists<
+  HooksResult,
+  {
+    init: Init<Model, Msg, WithoutViewProps<Props>> | Init<Model, Msg>;
+    update: Update<Model, Msg, WithoutViewProps<Props>> | Update<Model, Msg>;
+    subscriptions: Sub<Model, Msg, WithoutViewProps<Props>>;
+    view: React.VFC<Props>;
+  },
+  'useHooks',
+  UseHooks<Model, Msg, HooksResult, WithoutViewProps<Props>>
+>;
 
 export const Tea = <
   Model,
   Msg,
-  Props extends ViewProps<Model, Msg> = ViewProps<Model, Msg>
+  Props extends ViewProps<Model, Msg> = ViewProps<Model, Msg>,
+  HooksResult = never
 >(
-  teaProps: TeaProps<Model, Msg, Props>
+  teaProps: TeaProps<Model, Msg, Props, HooksResult>
 ) => {
   const {
     init: initWithoutProps,
@@ -76,6 +117,12 @@ export const Tea = <
     subscriptions: subscriptionsWithoutProps,
     view,
   } = teaProps;
+  const useHooks = (() => {
+    if ('useHooks' in teaProps) {
+      return teaProps.useHooks;
+    }
+    return () => ({} as HooksResult);
+  })();
   const TeaComponent = (propsWithoutViewProps: WithoutViewProps<Props>) => {
     const init = () => initWithoutProps({ props: propsWithoutViewProps });
 
@@ -101,10 +148,16 @@ export const Tea = <
       subscriptions,
     });
 
+    const hooksResult = useHooks({
+      ...useTeaResult,
+      props: propsWithoutViewProps,
+    } as UseHooksProps<Model, Msg, WithoutViewProps<Props>>);
+
     const props = {
       ...propsWithoutViewProps,
       ...useTeaResult,
-    } as Props;
+      hooksResult,
+    } as WithHooksResult<Props, HooksResult>;
 
     return view({ ...props });
   };

@@ -23,6 +23,8 @@ The advantages of TEA are that:
 - view and logic are separated, so they are easy to test.
 - "update" can handle asynchronous code.
 
+This library also supports using Hooks, so you can leverage assets of custom hooks.
+
 
 ## Installation
 
@@ -40,8 +42,8 @@ See [API.md](./doc/API.md).
 
 See:
 
--  [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
--  [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
+- [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
+- [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
 
 
 ## License

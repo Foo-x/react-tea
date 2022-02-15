@@ -1,6 +1,6 @@
 import { Cmd } from '@/Cmd';
 import { Effect, Sub } from '@/Sub';
-import { useTea, UseTeaInit, UseTeaUpdate, UseTeaUseHooks } from '@/useTea';
+import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
 import { exhaustiveCheck } from '@/utils';
 import { act, renderHook } from '@testing-library/react-hooks';
 
@@ -10,23 +10,14 @@ type Msg =
   | 'increment'
   | 'increment-with-cmd'
   | 'increment-with-batch'
-  | 'increment-with-hooks-result'
   | 'increment-with-same-version';
-
-type HooksResult = {
-  value: number;
-};
 
 const init: UseTeaInit<Model, Msg> = () => [
   { value: 0, version: 0 },
   Cmd.none(),
 ];
 
-const update: UseTeaUpdate<Model, Msg, HooksResult> = ({
-  model,
-  msg,
-  hooksResult,
-}) => {
+const update: UseTeaUpdate<Model, Msg> = ({ model, msg }) => {
   switch (msg) {
     case 'increment':
       return [
@@ -49,24 +40,12 @@ const update: UseTeaUpdate<Model, Msg, HooksResult> = ({
         ),
       ];
 
-    case 'increment-with-hooks-result':
-      return [
-        { value: model.value + hooksResult.value, version: model.version + 1 },
-        Cmd.none(),
-      ];
-
     case 'increment-with-same-version':
       return [{ value: model.value + 1, version: model.version }, Cmd.none()];
 
     default:
       return exhaustiveCheck(msg);
   }
-};
-
-const useHooks: UseTeaUseHooks<HooksResult> = () => {
-  return {
-    value: 20,
-  };
 };
 
 beforeAll(() => {
@@ -79,23 +58,22 @@ afterAll(() => {
 
 describe('useTea', () => {
   describe('no subscription', () => {
-    const subscriptions: Effect<Model, Msg, never, HooksResult>[] = [];
+    const subscriptions: Effect<Model, Msg, never>[] = [];
 
     test('initial result', () => {
       const { result } = renderHook(() =>
-        useTea({ init, update, subscriptions, useHooks })
+        useTea({ init, update, subscriptions })
       );
 
       expect(result.current.model.value).toBe(0);
       expect(typeof result.current.dispatch).toBe('function');
-      expect(result.current.hooksResult.value).toBe(20);
     });
 
     test('rerender on dispatch', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions, useHooks });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current.model.value).toBe(0);
@@ -112,7 +90,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions, useHooks });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current.model.value).toBe(0);
@@ -135,7 +113,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions, useHooks });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current.model.value).toBe(0);
@@ -165,7 +143,7 @@ describe('useTea', () => {
       let count = 0;
       const { result } = renderHook(() => {
         count += 1;
-        return useTea({ init, update, subscriptions, useHooks });
+        return useTea({ init, update, subscriptions });
       });
 
       expect(result.current.model.value).toBe(0);
@@ -186,20 +164,6 @@ describe('useTea', () => {
       expect(count).toBe(4);
     });
 
-    test('dispatch with hooksResult', () => {
-      const { result } = renderHook(() =>
-        useTea({ init, update, subscriptions, useHooks })
-      );
-
-      expect(result.current.model.value).toBe(0);
-
-      act(() => {
-        result.current.dispatch('increment-with-hooks-result');
-      });
-
-      expect(result.current.model.value).toBe(20);
-    });
-
     test('cmd in init', () => {
       const { result } = renderHook(() =>
         useTea({
@@ -209,7 +173,6 @@ describe('useTea', () => {
           ],
           update,
           subscriptions,
-          useHooks,
         })
       );
 

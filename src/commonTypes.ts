@@ -25,10 +25,6 @@ export type WithProps<T extends Record<string, unknown>, Props> = MergeIfExists<
   'props',
   Props
 >;
-export type WithHooksResult<
-  T extends Record<string, unknown>,
-  HooksResult
-> = MergeIfExists<HooksResult, T, 'hooksResult', HooksResult>;
 
 export type Dispatcher<Model, Msg> = {
   model: Model;

@@ -1,108 +1,66 @@
 import type { EffectCallback } from 'react';
 import { useEffect } from 'react';
-import type {
-  Dispatcher,
-  NullableProps,
-  WithHooksResult,
-  WithProps,
-} from './commonTypes';
+import type { Dispatcher, NullableProps, WithProps } from './commonTypes';
 
 export const subNoneSymbol = Symbol('Sub.none');
 
 export type EffectorProps<
   Model,
   Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
-> = WithHooksResult<WithProps<Dispatcher<Model, Msg>, Props>, HooksResult>;
-export type Effector<
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
-> = (
-  effectorProps: EffectorProps<Model, Msg, Props, HooksResult>
+  Props extends NullableProps = never
+> = WithProps<Dispatcher<Model, Msg>, Props>;
+export type Effector<Model, Msg, Props extends NullableProps = never> = (
+  effectorProps: EffectorProps<Model, Msg, Props>
 ) => [EffectCallback, unknown[]] | [EffectCallback];
-export type Effect<
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
-> = (effectProps: EffectorProps<Model, Msg, Props, HooksResult>) => void;
+export type Effect<Model, Msg, Props extends NullableProps = never> = (
+  effectProps: EffectorProps<Model, Msg, Props>
+) => void;
 
-export type Sub<
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
-> =
-  | Effect<Model, Msg, Props, HooksResult>
-  | Effect<Model, Msg, Props, HooksResult>[]
+export type Sub<Model, Msg, Props extends NullableProps = never> =
+  | Effect<Model, Msg, Props>
+  | Effect<Model, Msg, Props>[]
   | typeof subNoneSymbol;
 
 const none = (): typeof subNoneSymbol => {
   return subNoneSymbol;
 };
 
-const of = <
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
->(
-  effector: Effector<Model, Msg, Props, HooksResult>
-): Effect<Model, Msg, Props, HooksResult> => {
+const of = <Model, Msg, Props extends NullableProps = never>(
+  effector: Effector<Model, Msg, Props>
+): Effect<Model, Msg, Props> => {
   const useSub = ({
     model,
     dispatch,
     props,
-    hooksResult,
-  }: EffectorProps<Model, Msg, Props, HooksResult> & {
+  }: EffectorProps<Model, Msg, Props> & {
     props: Props;
-    hooksResult: HooksResult;
   }) => {
     const [effect, deps] = effector({
       model,
       dispatch,
       props,
-      hooksResult,
-    } as EffectorProps<Model, Msg, Props, HooksResult>);
+    } as EffectorProps<Model, Msg, Props>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(effect, deps);
   };
-  return useSub as Effect<Model, Msg, Props, HooksResult>;
+  return useSub as Effect<Model, Msg, Props>;
 };
 
-const onMount = <
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
->(
-  callback: (props: EffectorProps<Model, Msg, Props, HooksResult>) => void
-): Effect<Model, Msg, Props, HooksResult> => {
+const onMount = <Model, Msg, Props extends NullableProps = never>(
+  callback: (props: EffectorProps<Model, Msg, Props>) => void
+): Effect<Model, Msg, Props> => {
   return of((props) => [() => callback(props), []]);
 };
 
-const onUnmount = <
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
->(
-  callback: (props: EffectorProps<Model, Msg, Props, HooksResult>) => void
-): Effect<Model, Msg, Props, HooksResult> => {
+const onUnmount = <Model, Msg, Props extends NullableProps = never>(
+  callback: (props: EffectorProps<Model, Msg, Props>) => void
+): Effect<Model, Msg, Props> => {
   return of((props) => [() => () => callback(props), []]);
 };
 
-const batch = <
-  Model,
-  Msg,
-  Props extends NullableProps = never,
-  HooksResult = never
->(
-  ...subs: Effect<Model, Msg, Props, HooksResult>[]
-): Effect<Model, Msg, Props, HooksResult>[] => {
+const batch = <Model, Msg, Props extends NullableProps = never>(
+  ...subs: Effect<Model, Msg, Props>[]
+): Effect<Model, Msg, Props>[] => {
   return subs;
 };
 

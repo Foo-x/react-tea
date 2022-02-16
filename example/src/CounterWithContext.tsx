@@ -1,5 +1,12 @@
 import { Cmd, Init, Sub, Tea, Update, UseHooks, View } from '@foo-x/react-tea';
-import { createContext, Dispatch, PropsWithChildren, useContext } from 'react';
+import {
+  createContext,
+  Dispatch,
+  MouseEventHandler,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+} from 'react';
 
 // Context
 
@@ -64,7 +71,8 @@ type ChildProps = {
 
 type ChildHooksResult = {
   counterState: ContextModel;
-  counterDispatch: Dispatch<ContextMsg>;
+  onClickIncrement: MouseEventHandler<HTMLButtonElement>;
+  onClickDecrement: MouseEventHandler<HTMLButtonElement>;
 };
 
 const childInit: Init<ChildModel, ChildMsg, ChildProps> = () => [
@@ -83,9 +91,23 @@ const useChildHooks: UseHooks<
   ChildProps,
   ChildHooksResult
 > = () => {
+  const dispatch = useContext(CounterDispatchContext);
   return {
     counterState: useContext(CounterStateContext),
-    counterDispatch: useContext(CounterDispatchContext),
+    onClickIncrement: useCallback(
+      (e) => {
+        e.stopPropagation();
+        dispatch('increment');
+      },
+      [dispatch]
+    ),
+    onClickDecrement: useCallback(
+      (e) => {
+        e.stopPropagation();
+        dispatch('decrement');
+      },
+      [dispatch]
+    ),
   };
 };
 
@@ -97,23 +119,11 @@ const childView: View<ChildModel, ChildMsg, ChildProps, ChildHooksResult> = ({
     <div>
       <h3>{title}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <button
-          type='button'
-          onClick={(e) => {
-            e.stopPropagation();
-            hooksResult.counterDispatch('decrement');
-          }}
-        >
+        <button type='button' onClick={hooksResult.onClickDecrement}>
           -
         </button>
         {hooksResult.counterState}
-        <button
-          type='button'
-          onClick={(e) => {
-            e.stopPropagation();
-            hooksResult.counterDispatch('increment');
-          }}
-        >
+        <button type='button' onClick={hooksResult.onClickIncrement}>
           +
         </button>
       </div>

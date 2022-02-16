@@ -3,17 +3,19 @@ import { act, render, screen } from '@testing-library/react';
 import { init, subscriptions, update, view } from './SimpleCounter';
 
 describe('SimpleCounter', () => {
-  test('init returns default value and none cmd', () => {
-    const defaultValue = Math.random();
+  describe('init', () => {
+    it('returns default value and none cmd', () => {
+      const defaultValue = Math.random();
 
-    const [initModel, initCmd] = init({ props: { defaultValue } });
+      const [initModel, initCmd] = init({ props: { defaultValue } });
 
-    expect(initModel).toBe(defaultValue);
-    expect(initCmd).toBe(Cmd.none());
+      expect(initModel).toBe(defaultValue);
+      expect(initCmd).toBe(Cmd.none());
+    });
   });
 
   describe('update', () => {
-    test('increment msg returns incremented model and none cmd', () => {
+    it('returns incremented model and none cmd on increment msg', () => {
       const model = Math.random();
 
       const [newModel, newCmd] = update({
@@ -26,7 +28,7 @@ describe('SimpleCounter', () => {
       expect(newCmd).toBe(Cmd.none());
     });
 
-    test('decrement msg returns decremented model and none cmd', () => {
+    it('returns decremented model and none cmd on decrement msg', () => {
       const model = Math.random();
 
       const [newModel, newCmd] = update({
@@ -40,8 +42,10 @@ describe('SimpleCounter', () => {
     });
   });
 
-  test('subscriptions is none', () => {
-    expect(subscriptions).toBe(Sub.none());
+  describe('subscriptions', () => {
+    it('is none', () => {
+      expect(subscriptions).toBe(Sub.none());
+    });
   });
 
   describe('view', () => {
@@ -61,7 +65,7 @@ describe('SimpleCounter', () => {
       };
     });
 
-    it('has heading with default value', () => {
+    it('has heading of default value', () => {
       render(<View {...props} />);
 
       expect(
@@ -69,7 +73,7 @@ describe('SimpleCounter', () => {
       ).toBeInTheDocument();
     });
 
-    it('has model text', () => {
+    it('has text of model', () => {
       render(<View {...props} />);
 
       expect(screen.getByText(props.model)).toBeInTheDocument();

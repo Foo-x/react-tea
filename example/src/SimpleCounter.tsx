@@ -1,12 +1,4 @@
-import {
-  Cmd,
-  exhaustiveCheck,
-  Init,
-  Sub,
-  Tea,
-  Update,
-  View,
-} from '@foo-x/react-tea';
+import { Cmd, Init, Sub, Tea, Update, View } from '@foo-x/react-tea';
 
 type Model = number;
 
@@ -28,9 +20,6 @@ export const update: Update<Model, Msg, Props> = ({ model, msg }) => {
 
     case 'decrement':
       return [model - 1, Cmd.none()];
-
-    default:
-      return exhaustiveCheck(msg);
   }
 };
 

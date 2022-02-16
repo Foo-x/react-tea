@@ -43,6 +43,7 @@ See:
 
 - [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
 - [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
+- [CounterWithContext.tsx](./example/src/CounterWithContext.tsx).
 
 There is also an example of a test, which will show you how easy it is to test!
 

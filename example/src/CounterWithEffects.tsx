@@ -1,4 +1,12 @@
-import { Cmd, Init, Sub, Tea, Update, WithViewProps } from '@foo-x/react-tea';
+import {
+  Cmd,
+  exhaustiveCheck,
+  Init,
+  Sub,
+  Tea,
+  Update,
+  WithViewProps,
+} from '@foo-x/react-tea';
 
 type Model = { value: number; inputValue: number };
 
@@ -57,7 +65,7 @@ export const update: Update<Model, Msg, Props> = ({ model, msg, props }) => {
       return [{ ...model, inputValue: msg.value }, Cmd.none()];
 
     default:
-      return msg;
+      return exhaustiveCheck(msg);
   }
 };
 

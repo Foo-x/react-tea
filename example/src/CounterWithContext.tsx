@@ -1,4 +1,13 @@
-import { Cmd, Init, Sub, Tea, Update, UseHooks, View } from '@foo-x/react-tea';
+import {
+  Cmd,
+  exhaustiveCheck,
+  Init,
+  Sub,
+  Tea,
+  Update,
+  UseHooks,
+  View,
+} from '@foo-x/react-tea';
 import {
   createContext,
   Dispatch,
@@ -32,6 +41,9 @@ export const contextUpdate: Update<ContextModel, ContextMsg, ContextProps> = ({
 
     case 'decrement':
       return [model - 1, Cmd.none()];
+
+    default:
+      return exhaustiveCheck(msg);
   }
 };
 

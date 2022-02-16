@@ -194,7 +194,7 @@ describe('useTea', () => {
           init,
           update,
           subscriptions: [
-            Sub.of<Model, Msg>(() => [
+            Sub.of<Model, Msg, null>(() => [
               () => {
                 count += 1;
               },
@@ -220,7 +220,7 @@ describe('useTea', () => {
           init,
           update,
           subscriptions: [
-            Sub.of<Model, Msg>(({ model }) => [
+            Sub.of<Model, Msg, null>(({ model }) => [
               () => {
                 count += 1;
               },
@@ -253,7 +253,7 @@ describe('useTea', () => {
           init,
           update,
           subscriptions: [
-            Sub.of<Model, Msg>(() => [
+            Sub.of<Model, Msg, null>(() => [
               () => {
                 count += 1;
               },
@@ -280,7 +280,7 @@ describe('useTea', () => {
           init,
           update,
           subscriptions: [
-            Sub.of<Model, Msg>(() => [
+            Sub.of<Model, Msg, null>(() => [
               () => {
                 return () => {
                   count += 1;

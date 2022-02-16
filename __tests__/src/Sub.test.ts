@@ -10,32 +10,16 @@ describe('Sub', () => {
     it('returns custom hook that register effect', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<number, null>(({ model }) => [
+      const sub = Sub.of<null, null, number>(({ props }) => [
         () => {
-          spy(model);
-        },
-      ]);
-
-      const expected = Math.random();
-
-      renderHook(() => sub({ model: expected, dispatch: () => null }));
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toBeCalledWith(expected);
-    });
-
-    it('returns custom hook that register effect with props', () => {
-      const spy = jest.fn();
-
-      const sub = Sub.of<null, null, { value: number }>(({ props }) => [
-        () => {
-          spy(props.value);
+          spy(props);
         },
       ]);
 
       const expected = Math.random();
 
       renderHook(() =>
-        sub({ model: null, dispatch: () => null, props: { value: expected } })
+        sub({ model: null, dispatch: () => null, props: expected })
       );
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toBeCalledWith(expected);
@@ -44,7 +28,7 @@ describe('Sub', () => {
     it('re-register effect on deps update', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<number, null>(({ model }) => [
+      const sub = Sub.of<number, null, null>(({ model }) => [
         () => {
           spy();
         },
@@ -53,7 +37,7 @@ describe('Sub', () => {
 
       let model = 0;
       const { rerender } = renderHook(() =>
-        sub({ model, dispatch: () => null })
+        sub({ model, dispatch: () => null, props: null })
       );
       expect(spy).toHaveBeenCalledTimes(1);
 
@@ -68,7 +52,7 @@ describe('Sub', () => {
     it('not re-register effect if deps is empty', () => {
       const spy = jest.fn();
 
-      const sub = Sub.of<number, null>(() => [
+      const sub = Sub.of<number, null, null>(() => [
         () => {
           spy();
         },
@@ -77,7 +61,7 @@ describe('Sub', () => {
 
       let model = 0;
       const { rerender } = renderHook(() =>
-        sub({ model, dispatch: () => null })
+        sub({ model, dispatch: () => null, props: null })
       );
       expect(spy).toHaveBeenCalledTimes(1);
 
@@ -93,14 +77,14 @@ describe('Sub', () => {
   test('onMount returns custom hook that register effect which runs only on mount', () => {
     const spy = jest.fn();
 
-    const sub = Sub.onMount<number, null>(({ model }) => {
+    const sub = Sub.onMount<number, null, null>(({ model }) => {
       spy(model);
     });
 
     const expected = Math.random();
 
     const { rerender } = renderHook(() =>
-      sub({ model: expected, dispatch: () => null })
+      sub({ model: expected, dispatch: () => null, props: null })
     );
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toBeCalledWith(expected);
@@ -113,14 +97,14 @@ describe('Sub', () => {
   test('onUnmount returns custom hook that register effect which runs only on unmount', () => {
     const spy = jest.fn();
 
-    const sub = Sub.onUnmount<number, null>(({ model }) => {
+    const sub = Sub.onUnmount<number, null, null>(({ model }) => {
       spy(model);
     });
 
     const expected = Math.random();
 
     const { unmount } = renderHook(() =>
-      sub({ model: expected, dispatch: () => null })
+      sub({ model: expected, dispatch: () => null, props: null })
     );
     expect(spy).toHaveBeenCalledTimes(0);
 
@@ -134,7 +118,7 @@ describe('Sub', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
 
-    const sub = Sub.batch<null, null>(
+    const sub = Sub.batch<null, null, null>(
       Sub.of(() => [
         () => {
           spy1();
@@ -149,7 +133,9 @@ describe('Sub', () => {
     expect(sub).toHaveLength(2);
 
     renderHook(() =>
-      sub.forEach((subUnit) => subUnit({ model: null, dispatch: () => null }))
+      sub.forEach((subUnit) =>
+        subUnit({ model: null, dispatch: () => null, props: null })
+      )
     );
     expect(spy1).toHaveBeenCalledTimes(1);
     expect(spy2).toHaveBeenCalledTimes(1);

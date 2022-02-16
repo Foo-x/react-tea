@@ -66,7 +66,7 @@ describe('Tea', () => {
       ])
     );
 
-    const useHooks: UseHooks<Model, Msg, HooksResult, Props> = ({ props }) => {
+    const useHooks: UseHooks<Model, Msg, Props, HooksResult> = ({ props }) => {
       const [hooksValue, setHooksValue] = useState(props.value * 2);
       return {
         hooksValue,
@@ -204,15 +204,15 @@ describe('Tea', () => {
 
     type Msg = never;
 
-    const init: Init<Model, Msg> = () => [10, Cmd.none()];
+    const init: Init<Model, Msg, unknown> = () => [10, Cmd.none()];
 
-    const update: Update<Model, Msg> = ({ model }) => {
+    const update: Update<Model, Msg, unknown> = ({ model }) => {
       return [model, Cmd.none()];
     };
 
-    const subscriptions: Sub<Model, Msg> = Sub.none();
+    const subscriptions: Sub<Model, Msg, unknown> = Sub.none();
 
-    const view: View<Model, Msg> = ({ model }) => {
+    const view: View<Model, Msg, unknown> = ({ model }) => {
       return (
         <div>
           <div data-testid='model'>{model}</div>

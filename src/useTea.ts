@@ -30,7 +30,7 @@ export const useTea = <Model, Msg>(
   const { init, update, subscriptions } = useTeaProps;
 
   const reducer = ([model]: [Model, Cmd<Msg>], msg: Msg): [Model, Cmd<Msg>] =>
-    update({ model, msg } as UseTeaUpdateProps<Model, Msg>);
+    update({ model, msg });
 
   const [[model, cmd], dispatch] = useReducer(reducer, undefined, init);
 

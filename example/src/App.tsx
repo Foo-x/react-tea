@@ -1,20 +1,13 @@
-import {
-  Cmd,
-  exhaustiveCheck,
-  Init,
-  Sub,
-  Tea,
-  Update,
-  View,
-} from '@foo-x/react-tea';
+import { Cmd, Init, Sub, Tea, Update, View } from '@foo-x/react-tea';
 import { ReactElement } from 'react';
 import './App.css';
+import CounterWithContext from './CounterWithContext';
 import CounterWithEffects from './CounterWithEffects';
 import SimpleCounter from './SimpleCounter';
 
 type Model = ReactElement | null;
 
-type Msg = 'simple-counter' | 'counter-with-effects';
+type Msg = 'simple-counter' | 'counter-with-effects' | 'counter-with-context';
 
 type Props = {};
 
@@ -28,8 +21,8 @@ const update: Update<Model, Msg, Props> = ({ msg }) => {
     case 'counter-with-effects':
       return [<CounterWithEffects defaultValue={10} />, Cmd.none()];
 
-    default:
-      return exhaustiveCheck(msg);
+    case 'counter-with-context':
+      return [<CounterWithContext />, Cmd.none()];
   }
 };
 
@@ -57,6 +50,16 @@ const view: View<Model, Msg, Props> = ({ model, dispatch }) => {
             }}
           >
             Counter with effects
+          </a>
+        </li>
+        <li>
+          <a
+            href='#counter-with-context'
+            onClick={() => {
+              dispatch('counter-with-context');
+            }}
+          >
+            Counter with context
           </a>
         </li>
       </ul>

@@ -16,12 +16,14 @@ type Model = ReactElement | null;
 
 type Msg = 'simple-counter' | 'counter-with-effects';
 
-const init: Init<Model, Msg> = () => [null, Cmd.none()];
+type Props = {};
 
-const update: Update<Model, Msg> = ({ msg }) => {
+const init: Init<Model, Msg, Props> = () => [null, Cmd.none()];
+
+const update: Update<Model, Msg, Props> = ({ msg }) => {
   switch (msg) {
     case 'simple-counter':
-      return [<SimpleCounter />, Cmd.none()];
+      return [<SimpleCounter defaultValue={10} />, Cmd.none()];
 
     case 'counter-with-effects':
       return [<CounterWithEffects defaultValue={10} />, Cmd.none()];
@@ -31,9 +33,9 @@ const update: Update<Model, Msg> = ({ msg }) => {
   }
 };
 
-const subscriptions: Sub<Model, Msg> = Sub.none();
+const subscriptions: Sub<Model, Msg, Props> = Sub.none();
 
-const view: View<Model, Msg> = ({ model, dispatch }) => {
+const view: View<Model, Msg, Props> = ({ model, dispatch }) => {
   return (
     <div style={{ margin: '5rem auto', maxWidth: '400px' }}>
       <ul>

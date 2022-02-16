@@ -7,9 +7,11 @@ export {
   TeaProps,
   Update,
   UpdateProps,
+  UseHooks,
+  UseHooksProps,
   View,
   ViewProps,
   WithoutViewProps,
   WithViewProps,
 } from './Tea';
-export { exhaustiveCheck, memo, memoCallback } from './utils';
+export { exhaustiveCheck } from './utils';

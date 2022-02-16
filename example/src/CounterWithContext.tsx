@@ -18,11 +18,11 @@ type ContextProps = PropsWithChildren<{
   defaultValue: number;
 }>;
 
-const contextInit: Init<ContextModel, ContextMsg, ContextProps> = ({
+export const contextInit: Init<ContextModel, ContextMsg, ContextProps> = ({
   props,
 }) => [props.defaultValue, Cmd.none()];
 
-const contextUpdate: Update<ContextModel, ContextMsg, ContextProps> = ({
+export const contextUpdate: Update<ContextModel, ContextMsg, ContextProps> = ({
   model,
   msg,
 }) => {
@@ -35,10 +35,12 @@ const contextUpdate: Update<ContextModel, ContextMsg, ContextProps> = ({
   }
 };
 
-const CounterStateContext = createContext(0);
-const CounterDispatchContext = createContext<Dispatch<ContextMsg>>(() => {});
+export const CounterStateContext = createContext(0);
+export const CounterDispatchContext = createContext<Dispatch<ContextMsg>>(
+  () => {}
+);
 
-const contextView: View<ContextModel, ContextMsg, ContextProps> = ({
+export const contextView: View<ContextModel, ContextMsg, ContextProps> = ({
   model,
   dispatch,
   children,
@@ -75,17 +77,17 @@ type ChildHooksResult = {
   onClickDecrement: MouseEventHandler<HTMLButtonElement>;
 };
 
-const childInit: Init<ChildModel, ChildMsg, ChildProps> = () => [
+export const childInit: Init<ChildModel, ChildMsg, ChildProps> = () => [
   null,
   Cmd.none(),
 ];
 
-const childUpdate: Update<ChildModel, ChildMsg, ChildProps> = () => [
+export const childUpdate: Update<ChildModel, ChildMsg, ChildProps> = () => [
   null,
   Cmd.none(),
 ];
 
-const useChildHooks: UseHooks<
+export const useChildHooks: UseHooks<
   ChildModel,
   ChildMsg,
   ChildProps,
@@ -111,10 +113,12 @@ const useChildHooks: UseHooks<
   };
 };
 
-const childView: View<ChildModel, ChildMsg, ChildProps, ChildHooksResult> = ({
-  hooksResult,
-  title,
-}) => {
+export const childView: View<
+  ChildModel,
+  ChildMsg,
+  ChildProps,
+  ChildHooksResult
+> = ({ hooksResult, title }) => {
   return (
     <div>
       <h3>{title}</h3>
@@ -147,17 +151,17 @@ type ParentMsg = never;
 
 type ParentProps = {};
 
-const parentInit: Init<ParentModel, ParentMsg, ParentProps> = () => [
+export const parentInit: Init<ParentModel, ParentMsg, ParentProps> = () => [
   null,
   Cmd.none(),
 ];
 
-const parentUpdate: Update<ParentModel, ParentMsg, ParentProps> = () => [
+export const parentUpdate: Update<ParentModel, ParentMsg, ParentProps> = () => [
   null,
   Cmd.none(),
 ];
 
-const parentView: View<ParentModel, ParentMsg, ParentProps> = () => {
+export const parentView: View<ParentModel, ParentMsg, ParentProps> = () => {
   return (
     <CounterContextProvider defaultValue={10}>
       <h2>Counter with context</h2>

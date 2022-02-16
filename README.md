@@ -44,6 +44,10 @@ See:
 - [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
 - [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
 
+There is also an example of a test, which will show you how easy it is to test!
+
+- [SimpleCounter.test.tsx](./example/src/SimpleCounter.test.tsx)
+
 
 ## License
 

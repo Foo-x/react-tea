@@ -74,7 +74,6 @@ export type TeaProps<Model, Msg, Props, HooksResult = never> = MergeIfExists<
   'useHooks',
   UseHooks<Model, Msg, WithoutViewProps<Props>, HooksResult>
 >;
-
 export const Tea = <Model, Msg, Props, HooksResult = never>(
   teaProps: TeaProps<Model, Msg, Props, HooksResult>
 ) => {

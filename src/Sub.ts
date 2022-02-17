@@ -1,4 +1,3 @@
-import type { EffectCallback } from 'react';
 import { useEffect } from 'react';
 import type { Dispatcher } from './commonTypes';
 
@@ -9,7 +8,7 @@ export type EffectorProps<Model, Msg, Props> = Dispatcher<Model, Msg> & {
 };
 export type Effector<Model, Msg, Props> = (
   effectorProps: EffectorProps<Model, Msg, Props>
-) => [EffectCallback, unknown[]] | [EffectCallback];
+) => Parameters<typeof useEffect>;
 export type Effect<Model, Msg, Props> = (
   effectProps: EffectorProps<Model, Msg, Props>
 ) => void;

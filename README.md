@@ -35,6 +35,7 @@ npm install @foo-x/react-tea
 ## Documents
 
 - [Tutorial](./doc/Tutorial.md)
+- [Reference](./doc/Reference.md)
 
 
 ## Examples

@@ -1,6 +1,6 @@
 import { Cmd, cmdNoneSymbol } from '@/Cmd';
 
-type Msg = 'msg' | 'msg2';
+type Msg = 'msg' | 'msg2' | number;
 
 beforeAll(() => {
   jest.useFakeTimers();
@@ -39,6 +39,75 @@ describe('Cmd', () => {
     await cmd(dispatch);
 
     expect(dispatch).toBeCalledWith('msg');
+  });
+
+  describe('perform', () => {
+    it('returns function that runs task and dispatch with msg supplier', async () => {
+      const expected = Math.random();
+      const cmd = Cmd.perform<Msg, number>(
+        (value) => {
+          return value + 1;
+        },
+        () => Promise.resolve(expected)
+      );
+
+      const dispatch = jest.fn();
+      await cmd(dispatch);
+
+      expect(dispatch).toBeCalledWith(expected + 1);
+    });
+
+    test('error is ignored and it dispatch nothing', async () => {
+      const expected = Math.random();
+      const cmd = Cmd.perform<Msg, number>(
+        (value) => {
+          return value + 1;
+        },
+        () => Promise.reject(expected)
+      );
+
+      const dispatch = jest.fn();
+      await cmd(dispatch);
+
+      expect(dispatch).not.toBeCalled();
+    });
+  });
+
+  describe('attempt', () => {
+    it('returns function that runs task and dispatch with msg supplier', async () => {
+      const expected = Math.random();
+      const cmd = Cmd.attempt<Msg, number>(
+        (value) => {
+          if (typeof value === 'number') {
+            return value + 1;
+          }
+          return 'msg';
+        },
+        () => Promise.resolve(expected)
+      );
+
+      const dispatch = jest.fn();
+      await cmd(dispatch);
+
+      expect(dispatch).toBeCalledWith(expected + 1);
+    });
+
+    test('error is passed to msg supplier', async () => {
+      const cmd = Cmd.attempt<Msg, number>(
+        (value) => {
+          if (typeof value === 'number') {
+            return value + 1;
+          }
+          return 'msg';
+        },
+        () => Promise.reject(new Error())
+      );
+
+      const dispatch = jest.fn();
+      await cmd(dispatch);
+
+      expect(dispatch).toBeCalledWith('msg');
+    });
   });
 
   test('batch returns array with cmds', async () => {

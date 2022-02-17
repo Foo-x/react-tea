@@ -32,9 +32,35 @@ const promise = <Msg>(
   return promiseAction;
 };
 
+const perform = <Msg, Value>(
+  msgSupplier: (value: Value) => Msg,
+  task: () => Promise<Value>
+): PromiseAction<Msg> => {
+  return async (dispatch) => {
+    try {
+      dispatch(msgSupplier(await task()));
+    } catch {
+      // ignore error
+    }
+  };
+};
+
+const attempt = <Msg, Value, Err = Error>(
+  msgSupplier: (valueOrErr: Value | Err) => Msg,
+  task: () => Promise<Value>
+): PromiseAction<Msg> => {
+  return async (dispatch) => {
+    try {
+      dispatch(msgSupplier(await task()));
+    } catch (err) {
+      dispatch(msgSupplier(err as Err));
+    }
+  };
+};
+
 const batch = <Msg>(...cmds: PromiseAction<Msg>[]): PromiseAction<Msg>[] => {
   return cmds;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Cmd = { none, delay, promise, batch };
+export const Cmd = { none, delay, promise, perform, attempt, batch };

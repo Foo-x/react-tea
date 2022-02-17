@@ -22,6 +22,7 @@ Cmd.delay(action, timeout);
 /**
  * where
  * 
+ * <Msg>
  * action = (dispatch: React.Dispatch<Msg>) => void
  * timeout = number
  */
@@ -37,11 +38,46 @@ Cmd.promise(promiseAction);
 /**
  * where
  * 
+ * <Msg>
  * promiseAction = (dispatch: React.Dispatch<Msg>) => Promise<void>
  */
 ```
 
 Returns Cmd that dispatches a message asynchronously.
+
+
+### perform
+
+```ts
+Cmd.perform(msgSupplier, task);
+/**
+ * where
+ * 
+ * <Msg, Value>
+ * msgSupplier = (value: Value) => Msg
+ * task = () => Promise<Value>
+ */
+```
+
+Returns Cmd that dispatches a message supplied from `msgSupplier` which receives value from `task`.  
+If `task` fails, the error will be ignored and nothing will be dispatched.  
+This is useful to separate side effects as `task`.
+
+
+### attempt
+
+```ts
+Cmd.attempt(msgSupplier, task);
+/**
+ * where
+ * 
+ * <Msg, Value, Err>
+ * msgSupplier = (valueOrErr: Value | Err) => Msg
+ * task = () => Promise<Value>
+ */
+```
+
+Works like `perform`, but this one can handle errors.
 
 
 ### batch
@@ -51,6 +87,7 @@ Cmd.batch(...cmds);
 /**
  * where
  * 
+ * <Msg>
  * cmds = Cmd<Msg>[]
  */
 ```
@@ -80,6 +117,7 @@ Sub.of(effector);
 /**
  * where
  * 
+ * <Model, Msg, Props>
  * effector = (effectorProps) => Parameters<typeof useEffect>
  * effectorProps = {
  *   model: Model;
@@ -99,6 +137,7 @@ Sub.onMount(callback);
 /**
  * where
  * 
+ * <Model, Msg, Props>
  * callback = (props) => void
  * props = {
  *   model: Model;
@@ -118,6 +157,7 @@ Sub.onUnmount(callback);
 /**
  * where
  * 
+ * <Model, Msg, Props>
  * callback = (props) => void
  * props = {
  *   model: Model;
@@ -137,6 +177,7 @@ Sub.batch(...subs);
 /**
  * where
  * 
+ * <Model, Msg, Props>
  * subs = Sub<Model, Msg, Props>[]
  */
 ```
@@ -151,6 +192,7 @@ Tea({ init, update, subscriptions, useHooks, view });
 /**
  * where
  * 
+ * <Model, Msg, Props, HooksResult>
  * init = (initProps) => [Model, Cmd<Msg>]
  * initProps = {
  *   props: Props;

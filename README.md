@@ -46,7 +46,7 @@ npm install @foo-x/react-tea
 
 There is also an example of a test, which will show you how easy it is to test!
 
-- [Test of Simple Counter](./example/src/SimpleCounter.test.tsx)
+- [Test for Simple Counter](./example/src/SimpleCounter.test.tsx)
 
 
 ## License

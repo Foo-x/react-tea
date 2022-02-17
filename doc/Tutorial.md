@@ -10,6 +10,7 @@ First, define a few types.
     - messages triggered by view to update your state
 - Props
     - properties your component receives
+    - **Note that the keys `model`, `dispatch`, and `hooksResult` are reserved, so you cannot define them.**
 - HooksResult (Optional)
     - result of your custom Hook
 

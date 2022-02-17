@@ -107,4 +107,8 @@ Finally, call `Tea` with them and your component is ready!
 const Counter = Tea({ init, update, subscriptions, useHooks, view });
 ```
 
-For more information, see [Examples](../README.md#examples) or [Reference](./Reference.md).
+For more information, see:
+
+- [Examples](../README.md#examples)
+- [Reference](./Reference.md)
+- [Data Flow Diagram](./dev/DataFlowDiagram.md)

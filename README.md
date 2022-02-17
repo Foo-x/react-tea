@@ -32,22 +32,20 @@ npm install @foo-x/react-tea
 ```
 
 
-## API
+## Documents
 
-See [API.md](./doc/API.md).
+- [Tutorial](./doc/Tutorial.md)
 
 
-## Example
+## Examples
 
-See:
-
-- [SimpleCounter.tsx](./example/src/SimpleCounter.tsx).
-- [CounterWithEffects.tsx](./example/src/CounterWithEffects.tsx).
-- [CounterWithContext.tsx](./example/src/CounterWithContext.tsx).
+- [Simple Counter](./example/src/SimpleCounter.tsx)
+- [Counter with Effects](./example/src/CounterWithEffects.tsx)
+- [Counter with Context](./example/src/CounterWithContext.tsx)
 
 There is also an example of a test, which will show you how easy it is to test!
 
-- [SimpleCounter.test.tsx](./example/src/SimpleCounter.test.tsx)
+- [Test of SimpleCounter](./example/src/SimpleCounter.test.tsx)
 
 
 ## License

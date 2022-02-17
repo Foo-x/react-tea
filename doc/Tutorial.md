@@ -65,8 +65,8 @@ const subscriptions: Sub<Model, Msg, Props> = Sub.none();
 
 const useHooks: UseHooks<Model, Msg, Props, HooksResult> = ({ dispatch }) => {
   return {
-    increment: useCallback(() => dispatch('increment')),
-    decrement: useCallback(() => dispatch('decrement')),
+    increment: useCallback(() => dispatch('increment'), [dispatch]),
+    decrement: useCallback(() => dispatch('decrement'), [dispatch]),
   };
 };
 

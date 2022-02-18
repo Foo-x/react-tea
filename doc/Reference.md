@@ -3,7 +3,7 @@
 ## Cmd
 
 Cmd is an asynchronous action that dispatch messages.  
-Unlike the original TEA, it only handles asynchronous processing. This is because TypeScript allows to occur side effects anywhere, so if the process is synchronous, it can be executed in the update function.
+Unlike the original TEA, it only handles asynchronous processing. This is because TypeScript allows to occur side effects anywhere, so if the process is synchronous, you can execute it in the update function.
 
 
 ### none

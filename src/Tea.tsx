@@ -62,6 +62,7 @@ export type TeaProps<Model, Msg, Props, HooksResult = never> = MergeIfExists<
     update: Update<Model, Msg, Props>;
     subscriptions: Sub<Model, Msg, Props>;
     view: View<Model, Msg, Props, HooksResult>;
+    displayName?: string;
   },
   'useHooks',
   UseHooks<Model, Msg, Props, HooksResult>
@@ -74,6 +75,7 @@ export const Tea = <Model, Msg, Props, HooksResult = never>(
     update: updateWithoutProps,
     subscriptions: subscriptionsWithoutProps,
     view,
+    displayName,
   } = teaProps;
   const useHooks = (() => {
     if ('useHooks' in teaProps) {
@@ -119,5 +121,8 @@ export const Tea = <Model, Msg, Props, HooksResult = never>(
 
     return view({ ...props });
   };
+  if (displayName) {
+    TeaComponent.displayName = displayName;
+  }
   return TeaComponent;
 };

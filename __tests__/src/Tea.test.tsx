@@ -116,7 +116,14 @@ describe('Tea', () => {
       );
     };
 
-    const Sut = Tea({ init, view, update, subscriptions, useHooks });
+    const Sut = Tea({
+      init,
+      view,
+      update,
+      subscriptions,
+      useHooks,
+      displayName: 'Sut',
+    });
 
     describe('init', () => {
       test('initial', () => {

@@ -188,7 +188,7 @@ Returns array of Sub.
 ## Tea
 
 ```ts
-Tea({ init, update, subscriptions, useHooks, view });
+Tea({ init, update, subscriptions, useHooks, view, displayName });
 /**
  * where
  * 
@@ -216,7 +216,9 @@ Tea({ init, update, subscriptions, useHooks, view });
  *   props: Props;
  *   hooksResult?: HooksResult;
  * }>
+ * displayName? = string
  */
 ```
 
-Returns React component.
+Returns React component.  
+`displayName` is used in debugging messages. Default name is `TeaComponent`.

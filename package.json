@@ -1,6 +1,6 @@
 {
   "name": "@foo-x/react-tea",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "The Elm Architecture for React",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -55,12 +55,12 @@ export const CounterDispatchContext = createContext<Dispatch<ContextMsg>>(
 export const contextView: View<ContextModel, ContextMsg, ContextProps> = ({
   model,
   dispatch,
-  children,
+  props,
 }) => {
   return (
     <CounterStateContext.Provider value={model}>
       <CounterDispatchContext.Provider value={dispatch}>
-        {children}
+        {props.children}
       </CounterDispatchContext.Provider>
     </CounterStateContext.Provider>
   );
@@ -130,10 +130,10 @@ export const childView: View<
   ChildMsg,
   ChildProps,
   ChildHooksResult
-> = ({ hooksResult, title }) => {
+> = ({ hooksResult, props }) => {
   return (
     <div>
-      <h3>{title}</h3>
+      <h3>{props.title}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button type='button' onClick={hooksResult.onClickDecrement}>
           -

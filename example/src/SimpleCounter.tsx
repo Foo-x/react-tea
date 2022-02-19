@@ -36,15 +36,11 @@ export const update: Update<Model, Msg, Props> = ({ model, msg }) => {
 
 export const subscriptions: Sub<Model, Msg, Props> = Sub.none();
 
-export const view: View<Model, Msg, Props> = ({
-  model,
-  dispatch,
-  defaultValue,
-}) => {
+export const view: View<Model, Msg, Props> = ({ model, dispatch, props }) => {
   return (
     <div>
       <h2>Simple Counter</h2>
-      <h3>default: {defaultValue}</h3>
+      <h3>default: {props.defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type='button'

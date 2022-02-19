@@ -54,14 +54,18 @@ describe('SimpleCounter', () => {
     let props: {
       model: number;
       dispatch: () => void;
-      defaultValue: number;
+      props: {
+        defaultValue: number;
+      };
     };
 
     beforeEach(() => {
       props = {
         model: Math.random(),
         dispatch: jest.fn(),
-        defaultValue: Math.random(),
+        props: {
+          defaultValue: Math.random(),
+        },
       };
     });
 
@@ -69,7 +73,7 @@ describe('SimpleCounter', () => {
       render(<View {...props} />);
 
       expect(
-        screen.getByText(`default: ${props.defaultValue}`)
+        screen.getByText(`default: ${props.props.defaultValue}`)
       ).toBeInTheDocument();
     });
 

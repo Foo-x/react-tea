@@ -5,7 +5,7 @@ import {
   Sub,
   Tea,
   Update,
-  WithViewProps,
+  View,
 } from '@foo-x/react-tea';
 
 type Model = { value: number; inputValue: number };
@@ -82,15 +82,11 @@ export const subscriptions: Sub<Model, Msg, Props> = Sub.of(({ dispatch }) => [
   [],
 ]);
 
-export const view = ({
-  model,
-  dispatch,
-  defaultValue,
-}: WithViewProps<Model, Msg, Props>) => {
+export const view: View<Model, Msg, Props> = ({ model, dispatch, props }) => {
   return (
     <div>
       <h2>Counter with effects</h2>
-      <h3>default: {defaultValue}</h3>
+      <h3>default: {props.defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type='button'

@@ -213,8 +213,9 @@ Tea({ init, update, subscriptions, useHooks, view });
  * view = React.VFC<{
  *   model: Model;
  *   dispatch: Dispatch<Msg>;
+ *   props: Props;
  *   hooksResult?: HooksResult;
- * } & Props>
+ * }>
  */
 ```
 

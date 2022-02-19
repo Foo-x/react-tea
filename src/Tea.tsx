@@ -33,22 +33,14 @@ export type UseHooks<Model, Msg, Props, HooksResult> = (
   useHooksProps: UseHooksProps<Model, Msg, Props>
 ) => HooksResult;
 
-export type ViewProps<Model, Msg, HooksResult = never> = WithHooksResult<
-  Dispatcher<Model, Msg>,
+export type ViewProps<Model, Msg, Props, HooksResult = never> = WithHooksResult<
+  Dispatcher<Model, Msg> & {
+    props: Props;
+  },
   HooksResult
->;
-export type WithViewProps<Model, Msg, Props, HooksResult = never> = ViewProps<
-  Model,
-  Msg,
-  HooksResult
-> &
-  Props;
-export type WithoutViewProps<Props> = Omit<
-  Props,
-  'model' | 'dispatch' | 'hooksResult'
 >;
 export type View<Model, Msg, Props, HooksResult = never> = React.VFC<
-  WithViewProps<Model, Msg, Props, HooksResult>
+  ViewProps<Model, Msg, Props, HooksResult>
 >;
 
 const applyPropsToSub = <Model, Msg, Props>(
@@ -66,13 +58,13 @@ const applyPropsToSub = <Model, Msg, Props>(
 export type TeaProps<Model, Msg, Props, HooksResult = never> = MergeIfExists<
   HooksResult,
   {
-    init: Init<Model, Msg, WithoutViewProps<Props>>;
-    update: Update<Model, Msg, WithoutViewProps<Props>>;
-    subscriptions: Sub<Model, Msg, WithoutViewProps<Props>>;
+    init: Init<Model, Msg, Props>;
+    update: Update<Model, Msg, Props>;
+    subscriptions: Sub<Model, Msg, Props>;
     view: View<Model, Msg, Props, HooksResult>;
   },
   'useHooks',
-  UseHooks<Model, Msg, WithoutViewProps<Props>, HooksResult>
+  UseHooks<Model, Msg, Props, HooksResult>
 >;
 export const Tea = <Model, Msg, Props, HooksResult = never>(
   teaProps: TeaProps<Model, Msg, Props, HooksResult>
@@ -120,9 +112,9 @@ export const Tea = <Model, Msg, Props, HooksResult = never>(
     });
 
     const props = {
-      ...propsWithoutViewProps,
       ...useTeaResult,
       hooksResult,
+      props: propsWithoutViewProps,
     };
 
     return view({ ...props });

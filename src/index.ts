@@ -11,7 +11,5 @@ export {
   UseHooksProps,
   View,
   ViewProps,
-  WithoutViewProps,
-  WithViewProps,
 } from './Tea';
 export { exhaustiveCheck } from './utils';

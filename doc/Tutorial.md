@@ -10,7 +10,6 @@ First, define a few types.
     - messages triggered by view to update your state
 - Props
     - properties your component receives
-    - **Note that the keys `model`, `dispatch`, and `hooksResult` are reserved, so you cannot define them.**
 - HooksResult (Optional)
     - result of your custom Hook
 
@@ -72,13 +71,13 @@ const useHooks: UseHooks<Model, Msg, Props, HooksResult> = ({ dispatch }) => {
 
 const view: View<Model, Msg, Props> = ({
   model,
-  defaultValue,
+  props,
   hooksResult,
 }) => {
   return (
     <div>
       <h2>Counter</h2>
-      <h3>default: {defaultValue}</h3>
+      <h3>default: {props.defaultValue}</h3>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type='button'

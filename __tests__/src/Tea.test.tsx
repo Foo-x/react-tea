@@ -77,7 +77,7 @@ describe('Tea', () => {
     const view: View<Model, Msg, Props, HooksResult> = ({
       model,
       dispatch,
-      value,
+      props,
       hooksResult,
     }) => {
       return (
@@ -110,7 +110,7 @@ describe('Tea', () => {
             increment-hooks-value
           </button>
           <div data-testid='model'>{model}</div>
-          <div data-testid='value'>{value}</div>
+          <div data-testid='value'>{props.value}</div>
           <div data-testid='hooks-result'>{hooksResult.hooksValue}</div>
         </div>
       );

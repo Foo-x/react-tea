@@ -49,6 +49,11 @@ There is also an example of a test, which will show you how easy it is to test!
 - [Test for Simple Counter](./example/src/SimpleCounter.test.tsx)
 
 
+## Advance
+
+If the logic of the component is only with Hooks, consider using [react-container](https://github.com/Foo-x/react-container).
+
+
 ## License
 
 MIT

@@ -62,6 +62,7 @@ export type TeaProps<Model, Msg, Props, HooksResult = never> = MergeIfExists<
     update: Update<Model, Msg, Props>;
     subscriptions: Sub<Model, Msg, Props>;
     view: View<Model, Msg, Props, HooksResult>;
+    /** The name of the component used in debugging messages. */
     displayName?: string;
   },
   'useHooks',

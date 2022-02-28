@@ -97,7 +97,7 @@ Returns array of Cmd.
 
 ## Sub
 
-Sub is a listener that subscribe external events or component's lifecycle.  
+Sub is a listener that subscribes external events or component's lifecycle.  
 It is practically the same as `useEffect`.
 
 
@@ -107,7 +107,7 @@ It is practically the same as `useEffect`.
 Sub.none();
 ```
 
-Returns Sub that subscribe nothing.
+Returns Sub that subscribes nothing.
 
 
 ### of
@@ -127,7 +127,7 @@ Sub.of(effector);
  */
 ```
 
-Returns Sub that subscribe events.
+Returns Sub that subscribes events.
 
 
 ### onMount
@@ -147,7 +147,7 @@ Sub.onMount(callback);
  */
 ```
 
-Returns Sub that subscribe events on mount.
+Returns Sub that subscribes events on mount.
 
 
 ### onUnmount
@@ -167,7 +167,7 @@ Sub.onUnmount(callback);
  */
 ```
 
-Returns Sub that subscribe events on unmount.
+Returns Sub that subscribes events on unmount.
 
 
 ### batch

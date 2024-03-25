@@ -1,5 +1,5 @@
 import { Sub, subNoneSymbol } from '@/Sub';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 describe('Sub', () => {
   test('none returns unique symbol', () => {

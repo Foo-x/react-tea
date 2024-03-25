@@ -2,7 +2,7 @@ import { Cmd } from '@/Cmd';
 import { Effect, Sub } from '@/Sub';
 import { useTea, UseTeaInit, UseTeaUpdate } from '@/useTea';
 import { exhaustiveCheck } from '@/utils';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 type Model = { value: number; version: number };
 
@@ -161,7 +161,7 @@ describe('useTea', () => {
       });
 
       expect(result.current.model.value).toBe(3);
-      expect(count).toBe(4);
+      expect(count).toBe(3);
     });
 
     test('cmd in init', () => {

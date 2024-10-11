@@ -3,11 +3,12 @@ import { ReactElement } from 'react';
 import './App.css';
 import CounterWithContext from './CounterWithContext';
 import CounterWithEffects from './CounterWithEffects';
+import HttpRandomCat from './HttpRandomCat';
 import SimpleCounter from './SimpleCounter';
 
 type Model = ReactElement | null;
 
-type Msg = 'simple-counter' | 'counter-with-effects' | 'counter-with-context';
+type Msg = 'simple-counter' | 'counter-with-effects' | 'counter-with-context' | 'http-random-cat';
 
 type Props = {};
 
@@ -23,6 +24,9 @@ const update: Update<Model, Msg, Props> = ({ msg }) => {
 
     case 'counter-with-context':
       return [<CounterWithContext />, Cmd.none()];
+
+    case 'http-random-cat':
+      return [<HttpRandomCat />, Cmd.none()];
   }
 };
 
@@ -60,6 +64,16 @@ const view: View<Model, Msg, Props> = ({ model, dispatch }) => {
             }}
           >
             Counter with context
+          </a>
+        </li>
+        <li>
+          <a
+            href='#http-random-cat'
+            onClick={() => {
+              dispatch('http-random-cat');
+            }}
+          >
+            HTTP random cat
           </a>
         </li>
       </ul>

@@ -45,6 +45,8 @@ npm install @foo-x/react-tea
 - [Counter with Context](./example/src/CounterWithContext.tsx)
 - [HTTP Random Cat](./example/src/HttpRandomCat.tsx)
 
+Live examples at <https://foo-x.github.io/react-tea/> .
+
 There is also an example of a test, which will show you how easy it is to test!
 
 - [Test for Simple Counter](./example/src/SimpleCounter.test.tsx)

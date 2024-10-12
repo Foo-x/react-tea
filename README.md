@@ -43,6 +43,7 @@ npm install @foo-x/react-tea
 - [Simple Counter](./example/src/SimpleCounter.tsx)
 - [Counter with Effects](./example/src/CounterWithEffects.tsx)
 - [Counter with Context](./example/src/CounterWithContext.tsx)
+- [HTTP Random Cat](./example/src/HttpRandomCat.tsx)
 
 There is also an example of a test, which will show you how easy it is to test!
 
